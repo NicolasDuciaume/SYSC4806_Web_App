@@ -2,22 +2,22 @@ package SYSC6.Project;
 
 public class Login {
 
-    private String name;
-    private String student_num;
+    private String username;
+    private String password;
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getStudent_num() {
-        return student_num;
+    public String getPassword() {
+        return password;
     }
 
-    public void setStudent_num(String student_num) {
-        this.student_num = student_num;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
