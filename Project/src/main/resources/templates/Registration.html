@@ -219,7 +219,7 @@
     <div class="login">
         <div class="heading">
             <h2>Sign in</h2>
-            <form action="#" th:action="@{/login_form}" th:object="${Login}" method="post">
+            <form action="#" th:action="@{/Create}" th:object="${Login}" method="post">
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
                 <div class="input-group input-group-lg">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -231,14 +231,11 @@
                     <input type="text" class="form-control" placeholder="Password" th:field="*{password}">
                 </div>
 
-                <button type="submit" class="float">Login</button>
+                <button type="submit" class="float">Create</button>
             </form>
         </div>
     </div>
 </div>
-<form action="#" th:action="@{/Register}" method="post">
-    <button type="submit" class="float">Register</button>
-</form>
 
 </body>
 </html>
