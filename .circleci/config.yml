@@ -36,7 +36,7 @@ workflows:
   ToHerokuPipe:
     jobs:
       - maven/test
-        maven_command: 'SYSC4806_Web_App/Project/pom.xml'
-        app_src_directory: 'SYSC4806_Web_App/Project/src/'
+        maven_command: SYSC4806_Web_App/Project/pom.xml
+        app_src_directory: SYSC4806_Web_App/Project/src/
 
       
