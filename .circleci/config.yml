@@ -36,6 +36,6 @@ workflows:
   ToHerokuPipe:
     jobs:
       - maven/test
-        app_src_directory: 'Project'
+        app_src_directory: '/Project'
 
       
