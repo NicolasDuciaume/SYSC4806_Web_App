@@ -36,6 +36,6 @@ workflows:
   ToHerokuPipe:
     jobs:
       - maven/test
-        maven_command: /Project/pom.xml
+            settings_file: /Project/pom.xml
 
       
