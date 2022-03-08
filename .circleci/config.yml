@@ -10,7 +10,5 @@ orbs:
 workflows:
   ToHerokuPipe:
     jobs:
-      - maven/test:
-          command: '-f /Project/pom.xml'
-
+      - maven/test
       
