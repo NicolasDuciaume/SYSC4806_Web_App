@@ -11,6 +11,6 @@ workflows:
   ToHerokuPipe:
     jobs:
       - maven/test:
-          settings_file: ../Project/pom.xml
+          command: '-f /Project/pom.xml'
 
       
