@@ -35,7 +35,7 @@ orbs:
 workflows:
   ToHerokuPipe:
     jobs:
-      - maven/test
+      - maven/test:
         settings_file: /Project/pom.xml
 
       
