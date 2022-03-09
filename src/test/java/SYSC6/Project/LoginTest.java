@@ -36,7 +36,7 @@ class LoginTest {
 
     @Test
     void setUsername() {
-        assertNull(login.getPassword());
+        assertNull(login.getUsername());
 
         login.setUsername(u1);
         assertTrue(login.getUsername() == u1);
