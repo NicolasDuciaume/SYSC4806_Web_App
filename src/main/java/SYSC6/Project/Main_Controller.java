@@ -1,6 +1,5 @@
 package SYSC6.Project;
 
-import com.fasterxml.jackson.core.JsonParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,7 +39,7 @@ public class Main_Controller {
             if(user.getUsername().equals(login.getUsername())){
                 if(user.getPassword().equals(login.getPassword())){
                     id = user.getId();
-                    return "redirect:/compare_talent";
+                    return "redirect:/user_portal";
                 }
             }
         }
@@ -63,7 +62,7 @@ public class Main_Controller {
     public String create(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
         model.addAttribute("login", login);
         id = createUser(login.getUsername(), login.getPassword());
-        return "redirect:/compare_talent";
+        return "redirect:/user_portal";
     }
 
     @PostMapping("/LogOut")
@@ -72,12 +71,12 @@ public class Main_Controller {
         return "redirect:/";
     }
 
-    @GetMapping("/compare_talent")
+    @GetMapping("/user_portal")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
-        return "compare_talent";
+        return "user_portal";
     }
 
     public Long createUser(String Username, String Password){
