@@ -24,11 +24,14 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    /*@GetMapping("/user/get/{Username}")
+    @GetMapping("/user/get/{Username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
         User user = userRepository.findByUsername(Username);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }*/
+        if(user != null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("/user")
     public ResponseEntity<List<User>> getAllAddressBooks(){
