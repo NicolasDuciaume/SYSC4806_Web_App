@@ -44,8 +44,8 @@ public class Main_Controller {
                 }
             }
         }
-        model.addAttribute("message", "Wrong login information");
-        return "login_form";
+        attributes.addFlashAttribute("message", "Wrong username/password");
+        return "redirect:/";
     }
 
     @PostMapping("/Register")
