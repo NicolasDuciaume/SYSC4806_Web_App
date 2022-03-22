@@ -40,11 +40,11 @@ public class User implements Serializable{
     }
 
     public void setUsername(String username) {
-        username = username;
+        this.username = username;
     }
 
     public void setPassword(String password) {
-        password = password;
+        this.password = password;
     }
 
     @Override
