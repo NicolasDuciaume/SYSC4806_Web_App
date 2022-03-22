@@ -9,18 +9,18 @@ public class User implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Column(name = "Username")
-    private String Username;
-    @Column(name = "Password")
-    private String Password;
+    @Column(name = "username")
+    private String username;
+    @Column(name = "password")
+    private String password;
 
     public User(){
 
     }
 
     public User(String Username, String Password){
-        this.Username = Username;
-        this.Password = Password;
+        this.username = Username;
+        this.password = Password;
     }
 
     public Long getId() {
@@ -28,11 +28,11 @@ public class User implements Serializable{
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setId(Long id) {
@@ -40,17 +40,17 @@ public class User implements Serializable{
     }
 
     public void setUsername(String username) {
-        Username = username;
+        username = username;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        password = password;
     }
 
     @Override
     public String toString() {
         return String.format(
                 "User[id=%d, Username=%s, Password=%s]",
-                id, Username, Password);
+                id, username, password);
     }
 }
