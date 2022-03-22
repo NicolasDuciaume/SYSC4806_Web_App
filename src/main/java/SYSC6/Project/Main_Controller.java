@@ -62,6 +62,14 @@ public class Main_Controller {
     @PostMapping("/Create")
     public String create(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
         model.addAttribute("login", login);
+        ArrayList<User> users = checkUser();
+        for(User user : users){
+            if(user.getUsername().equals(login.getUsername())){
+                attributes.addFlashAttribute("message", "Username already Exists pick another");
+                return "redirect:/Registration";
+            }
+        }
+
         id = createUser(login.getUsername(), login.getPassword());
         return "redirect:/compare_talent";
     }
