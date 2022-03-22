@@ -10,17 +10,24 @@ public class User implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @Column(name = "Username")
-    private String Username;
+    private String username;
     @Column(name = "Password")
-    private String Password;
+    private String password;
+    @Column(name = "Role")
+    private RoleType role = RoleType.NO_ROLE;
 
     public User(){
 
     }
 
-    public User(String Username, String Password){
-        this.Username = Username;
-        this.Password = Password;
+    public User(String username, String password){
+        this(username, password, RoleType.NO_ROLE);
+    }
+
+    public User(String username, String password, RoleType role){
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -28,11 +35,15 @@ public class User implements Serializable{
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
+    }
+
+    public RoleType getRole() {
+        return role;
     }
 
     public void setId(Long id) {
@@ -40,17 +51,21 @@ public class User implements Serializable{
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, Username=%s, Password=%s]",
-                id, Username, Password);
+                "User[id=%d, Username=%s, Password=%s, Role=%s]",
+                id, username, password, role);
     }
 }
