@@ -13,9 +13,10 @@ class UserTest {
     void setUp() {
         username = "student";
         password = "qwerty";
-        id = new Long(123456789);
+        id = 123456789L;
         user1 = new User();
         user2 = new User(username, password);
+        user2.setRole(RoleType.ADMIN);
     }
 
     @Test
@@ -30,15 +31,23 @@ class UserTest {
     @Test
     void getUsername() {
         assertNull(user1.getUsername());
-        assertTrue(user2.getUsername() == username);
-        assertFalse(user2.getUsername() == "Username12");
+        assertSame(user2.getUsername(), username);
+        assertNotSame("Username12", user2.getUsername());
     }
 
     @Test
     void getPassword() {
         assertNull(user1.getPassword());
-        assertTrue(user2.getPassword() == password);
-        assertFalse(user2.getPassword() == "pw456");
+        assertSame(user2.getPassword(), password);
+        assertNotSame("pw456", user2.getPassword());
+    }
+
+    @Test
+    void getRole() {
+        assertSame(user1.getRole(), RoleType.NO_ROLE);
+        User userDefaultRole = new User("name","pw");
+        assertSame(userDefaultRole.getRole(), RoleType.NO_ROLE);
+        assertEquals(RoleType.ADMIN,user2.getRole());
     }
 
     @Test
@@ -51,16 +60,16 @@ class UserTest {
 
         user2.setId(id);
         assertEquals(id, user2.getId());
-        assertFalse(user2.getId() == 4567);
+        assertNotEquals(4567, (long) user2.getId());
     }
 
     @Test
     void setUsername() {
         assertNull(user1.getUsername());
-        assertTrue(user2.getUsername() == username);
+        assertSame(user2.getUsername(), username);
 
         user1.setUsername(username);
-        assertTrue(user1.getUsername() == username);
+        assertSame(user1.getUsername(), username);
 
         user2.setUsername("User");
         assertEquals("User", user2.getUsername());
@@ -69,12 +78,18 @@ class UserTest {
     @Test
     void setPassword() {
         assertNull(user1.getPassword());
-        assertTrue(user2.getPassword() == password);
+        assertSame(user2.getPassword(), password);
 
         user1.setPassword(password);
         assertEquals(password, user1.getPassword());
 
         user2.setPassword("pw123");
         assertEquals("pw123", user2.getPassword());
+    }
+
+    @Test
+    void setRole() {
+        user2.setRole(RoleType.PAID_USER);
+        assertEquals(RoleType.PAID_USER,user2.getRole());
     }
 }

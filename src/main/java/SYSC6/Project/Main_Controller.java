@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @Controller
@@ -85,6 +86,8 @@ public class Main_Controller {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
+
+        model.addAttribute("role", user.getRole().toString());
         return "compare_talent";
     }
 
@@ -101,18 +104,18 @@ public class Main_Controller {
             String jsonInputString = "{" + '"' + "username" + '"' + ":" + '"' + Username + '"' + "," + '"' + "password" + '"' + ":" + '"' + Password + '"'+"}";
             System.out.println(jsonInputString);
             try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 x = (Long) temp.get("id");
             } catch (ParseException e) {
@@ -138,13 +141,13 @@ public class Main_Controller {
             con.setDoOutput(true);
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString());
@@ -171,13 +174,13 @@ public class Main_Controller {
             con.setDoOutput(true);
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
