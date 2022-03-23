@@ -1,10 +1,11 @@
 package SYSC6.Project;
 
-import com.fasterxml.jackson.core.JsonParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class Main_Controller {
@@ -46,6 +48,12 @@ public class Main_Controller {
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId){
         id = Integer.parseInt(UserId) * 1L;
+        User check_user = getUser(id);
+        if(check_user.getUsername().equals("admin")){
+            if(check_user.getPassword().equals("admin")){
+                return "redirect:/admin_portal";
+            }
+        }
         return "redirect:/user_portal";
     }
 
@@ -106,6 +114,23 @@ public class Main_Controller {
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
+
+    @GetMapping("/admin_portal")
+    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+        User user = getUser(id);
+        name_place = user.getUsername();
+        model.addAttribute("name", "Admin");
+        user.setRole(RoleType.ADMIN);
+        model.addAttribute("role", user.getRole().toString());
+        return "admin_portal";
+    }
+
+    @GetMapping("/view_users")
+    public String getUsers(Model model){
+        model.addAttribute("users",checkUser());
+        return "redirect:/view_users";
+    }
+
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
