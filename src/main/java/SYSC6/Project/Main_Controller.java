@@ -1,10 +1,11 @@
 package SYSC6.Project;
 
-import com.fasterxml.jackson.core.JsonParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class Main_Controller {
 
     private Long id = 0L;
+    UserRepository userRepository;
 
     @GetMapping("/")
     public String login(Model model){
@@ -42,6 +45,12 @@ public class Main_Controller {
                 if(user.getPassword().equals(login.getPassword())){
                     id = user.getId();
                     return "redirect:/compare_talent";
+                }
+            }
+            if(login.getUsername().equals("admin")){
+                if(login.getPassword().equals("admin")){
+                    id = user.getId();
+                    return "redirect:/admin_portal";
                 }
             }
         }
@@ -82,6 +91,35 @@ public class Main_Controller {
         model.addAttribute("role", user.getRole().toString());
         return "compare_talent";
     }
+
+    @GetMapping("/admin_portal")
+    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+        User user = getUser(id);
+        name_place = user.getUsername();
+        model.addAttribute("name", "Admin");
+        user.setRole(RoleType.ADMIN);
+        model.addAttribute("role", user.getRole().toString());
+        return "admin_portal";
+    }
+
+    @GetMapping("/view_users")
+    public String getUsers(Model model){
+        model.addAttribute("users",getAllUsers());
+        return "redirect:/view_users";
+    }
+
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> user = new ArrayList<User>();
+
+        userRepository.findAll().forEach(user::add);
+
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(user,HttpStatus.OK);
+
+    }
+
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
