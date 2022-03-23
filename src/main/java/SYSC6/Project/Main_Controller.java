@@ -7,7 +7,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
@@ -33,30 +36,30 @@ public class Main_Controller {
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId){
         id = Integer.parseInt(UserId) * 1L;
-        return "redirect:/compare_talent";
+        return "redirect:/user_portal";
     }
 
     @PostMapping("/Register")
     public String Register(){
-        return "Registration";
+        return "redirect:/Registration";
     }
 
-    /*@GetMapping("/Registration")
+    @GetMapping("/Registration")
     public String Reg(Model model){
         model.addAttribute("Login",new Login());
         return "Registration";
-    }*/
+    }
 
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
-        return "redirect:/compare_talent";
+        return "redirect:/user_portal";
     }
 
     @PostMapping("/LogOut")
     public String logout(){
         id = 0L;
-        return "login_form";
+        return "redirect:/";
     }
 
     @GetMapping("/compare_talent")
@@ -73,7 +76,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/add");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -111,7 +114,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -144,7 +147,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
