@@ -24,14 +24,37 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    /*@GetMapping("/user/get/{Username}")
+    @GetMapping("/user/get/{Username}/{Password}")
+    public ResponseEntity<User> getUserByUsernameandPassword(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
+        User user = userRepository.findByUsername(Username);
+        ArrayList<User> passUsers = userRepository.findByPassword(Password);
+        if (passUsers == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        for(User s : passUsers){
+            if(s.getUsername().equals(user.getUsername())){
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            }
+        }
+        if(user == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/user/get/{Username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
         User user = userRepository.findByUsername(Username);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }*/
+        if(user == null){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/user")
-    public ResponseEntity<List<User>> getAllAddressBooks(){
+    public ResponseEntity<List<User>> getAllUsers(){
         List<User> user = new ArrayList<User>();
 
         userRepository.findAll().forEach(user::add);
