@@ -38,27 +38,18 @@ public class Main_Controller {
 
     @PostMapping("/Register")
     public String Register(){
-        return "redirect:/Registration";
-    }
-
-    @GetMapping("/Registration")
-    public String Reg(Model model){
-        model.addAttribute("Login",new Login());
         return "Registration";
     }
 
-    @PostMapping("/Create")
-    public String create(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
-        model.addAttribute("login", login);
-        ArrayList<User> users = checkUser();
-        for(User user : users){
-            if(user.getUsername().equals(login.getUsername())){
-                attributes.addFlashAttribute("message", "Username already Exists pick another");
-                return "redirect:/Registration";
-            }
-        }
+    /*@GetMapping("/Registration")
+    public String Reg(Model model){
+        model.addAttribute("Login",new Login());
+        return "Registration";
+    }*/
 
-        id = createUser(login.getUsername(), login.getPassword());
+    @PostMapping("/Create")
+    public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
+        id = createUser(user,pass);
         return "redirect:/compare_talent";
     }
 
