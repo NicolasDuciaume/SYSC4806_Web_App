@@ -7,10 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
@@ -19,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @Controller
@@ -33,19 +31,9 @@ public class Main_Controller {
     }
 
     @PostMapping("/login_form")
-    public String login_process(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
-        model.addAttribute("login", login);
-        ArrayList<User> users = checkUser();
-        for(User user : users){
-            if(user.getUsername().equals(login.getUsername())){
-                if(user.getPassword().equals(login.getPassword())){
-                    id = user.getId();
-                    return "redirect:/compare_talent";
-                }
-            }
-        }
-        attributes.addFlashAttribute("message", "Wrong username/password");
-        return "redirect:/";
+    public String login_process(@RequestParam(value="id",required=true) String UserId){
+        id = Integer.parseInt(UserId) * 1L;
+        return "redirect:/compare_talent";
     }
 
     @PostMapping("/Register")
@@ -77,7 +65,7 @@ public class Main_Controller {
     @PostMapping("/LogOut")
     public String logout(){
         id = 0L;
-        return "redirect:/";
+        return "login_form";
     }
 
     @GetMapping("/compare_talent")
@@ -85,6 +73,8 @@ public class Main_Controller {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
+
+        model.addAttribute("role", user.getRole().toString());
         return "compare_talent";
     }
 
@@ -92,7 +82,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
+            URL url = new URL ("http://localhost:8080/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -101,18 +91,18 @@ public class Main_Controller {
             String jsonInputString = "{" + '"' + "username" + '"' + ":" + '"' + Username + '"' + "," + '"' + "password" + '"' + ":" + '"' + Password + '"'+"}";
             System.out.println(jsonInputString);
             try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 x = (Long) temp.get("id");
             } catch (ParseException e) {
@@ -130,7 +120,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -138,13 +128,13 @@ public class Main_Controller {
             con.setDoOutput(true);
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString());
@@ -163,7 +153,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("http://localhost:8080/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -171,13 +161,13 @@ public class Main_Controller {
             con.setDoOutput(true);
 
             try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
+                System.out.println(response);
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
