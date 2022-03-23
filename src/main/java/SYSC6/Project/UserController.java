@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {
@@ -24,13 +24,19 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/user/get/{Username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
+    @GetMapping("/user/get/{Username}/{Password}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
         User user = userRepository.findByUsername(Username);
-        if(user != null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        ArrayList<User> passUsers = userRepository.findByPassword(Password);
+        for(User s : passUsers){
+            if(s.getUsername().equals(user.getUsername())){
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(user == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/user")

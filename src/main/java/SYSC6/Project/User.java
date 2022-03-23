@@ -35,7 +35,7 @@ public class User implements Serializable{
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public String getPassword() {
