@@ -86,6 +86,12 @@ public class Main_Controller {
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
+        User check_user = getUser(id);
+        if(check_user.getUsername().equals("admin")){
+            if(check_user.getPassword().equals("admin")){
+                return "redirect:/admin_portal";
+            }
+        }
         return "redirect:/user_portal";
     }
 
