@@ -1,5 +1,6 @@
 package SYSC6.Project;
 
+import com.fasterxml.jackson.core.JsonParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -33,19 +34,9 @@ public class Main_Controller {
     }
 
     @PostMapping("/login_form")
-    public String login_process(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
-        model.addAttribute("login", login);
-        ArrayList<User> users = checkUser();
-        for(User user : users){
-            if(user.getUsername().equals(login.getUsername())){
-                if(user.getPassword().equals(login.getPassword())){
-                    id = user.getId();
-                    return "redirect:/user_portal";
-                }
-            }
-        }
-        model.addAttribute("message", "Wrong login information");
-        return "login_form";
+    public String login_process(@RequestParam(value="id",required=true) String UserId){
+        id = Integer.parseInt(UserId) * 1L;
+        return "redirect:/user_portal";
     }
 
     @PostMapping("/Register")
@@ -60,9 +51,8 @@ public class Main_Controller {
     }
 
     @PostMapping("/Create")
-    public String create(@ModelAttribute Login login, Model model, RedirectAttributes attributes){
-        model.addAttribute("login", login);
-        id = createUser(login.getUsername(), login.getPassword());
+    public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
+        id = createUser(user,pass);
         return "redirect:/user_portal";
     }
 
@@ -72,15 +62,14 @@ public class Main_Controller {
         return "redirect:/";
     }
 
-    @GetMapping("/user_portal")
+    @GetMapping("/compare_talent")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
 
         model.addAttribute("role", user.getRole().toString());
-
-        return "user_portal";
+        return "compare_talent";
     }
 
     public Long createUser(String Username, String Password){

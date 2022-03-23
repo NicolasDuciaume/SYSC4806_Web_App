@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {
@@ -24,11 +24,33 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    /*@GetMapping("/user/get/{Username}")
+    @GetMapping("/user/get/{Username}/{Password}")
+    public ResponseEntity<User> getUserByUsernameandPassword(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
+        User user = userRepository.findByUsername(Username);
+        ArrayList<User> passUsers = userRepository.findByPassword(Password);
+        System.out.println("Why");
+        for(User s : passUsers){
+            if(s.getUsername().equals(user.getUsername())){
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            }
+        }
+        if(user == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/user/get/{Username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
         User user = userRepository.findByUsername(Username);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }*/
+        if(user == null){
+            System.out.println("come on");
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/user")
     public ResponseEntity<List<User>> getAllAddressBooks(){
