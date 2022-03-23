@@ -10,16 +10,15 @@ This web app will serve as a self-serve customer portal for an existing app call
 - Tyler Mair: tylermair@cmail.carleton.ca
 
 ## Current State of the Project
-The project has been initialized with all the components including CircleCI and Heroku being up and running. The app currently has the generic functionality of login and register. 
+The project has moved to the alpha release stage. The features are all mostly initialized but all the features are not completely functional.
 
 ## Plan for the next sprint
 The plan for the next sprint is:
-- Make the login and registering process more secure
-- Add different level of access depending on the type of customer: Admin, Paid customer and Trial customer
-- Make the app more visually appealing by adding CSS files 
+- All the features are to be completed by the end of next sprint
+- Improve security of the login and registration
 
 ## Schema of the Database
 ![DB diagram drawio](https://user-images.githubusercontent.com/44377220/157507994-b8d532f4-2ad5-4eee-9c75-f4d624f15233.png)
 
 ## UML Class Diagrams
-![Class Diagram drawio](https://user-images.githubusercontent.com/44377220/157506917-5eefc7eb-6b91-47f1-9f69-714755ca7796.png)
+![Class Diagram_deliverable 2 drawio](https://user-images.githubusercontent.com/44377220/159767279-a6953f53-f73e-43b5-af17-b284b9e344de.png)
