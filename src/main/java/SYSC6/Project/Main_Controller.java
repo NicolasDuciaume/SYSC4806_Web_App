@@ -7,10 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
@@ -101,65 +98,15 @@ public class Main_Controller {
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
+        model.addAttribute("userId", id);
         model.addAttribute("name", name_place);
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
 
-    @PostMapping("/Upgrade")
-    private String upgradeUser(@ModelAttribute Long id){
-        User user = getUser(id);
-        UserUtility.upgradeUserRole(user);
-        upgradeUser(user);
+    @PutMapping("/Upgrade")
+    private String upgradeUser(){
         return "redirect:/user_portal";
-    }
-
-    public Long upgradeUser(User user){
-        JSONParser jsonParser = new JSONParser();
-        Long x = 0L;
-        try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/upgrade");
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
-            /* REQUEST
-            {
-                "id":"LONG"
-                "username":"STRING"
-                "password":"STRING" <-- TODO SHOULD NOT send PW in the clear
-                "role":"INT"
-             */
-            String jsonInputString = "{\n" + '"' + "id" + '"' + ":" + '"' + user.getId() + '"' + ",\n" +
-                    '"' + "username" + '"' + ":" + '"' + user.getUsername() + '"' + ",\n" +
-                    '"' + "password" + '"' + ":" + '"' + user.getPassword() + '"' + ",\n" +
-                    '"' + "role" + '"' + ":" + '"' + user.getRole().ordinal() + '"' + ",\n" +
-                    "}";
-            System.out.println(jsonInputString);
-            try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println(response);
-                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                x = (Long) temp.get("id");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (IOException e){
-            System.out.println("Error");
-        }
-        return x;
     }
 
     public Long createUser(String Username, String Password){

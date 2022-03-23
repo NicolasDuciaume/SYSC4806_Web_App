@@ -221,7 +221,7 @@
     <div class="login">
         <div class="heading">
             <h2>Sign in</h2>
-            <form id="hello" action="#" th:action="@{/login_form}" th:object="${Login}" method="post">
+            <form id="loginForm" action="#" th:action="@{/login_form}" th:object="${Login}" method="post">
                 <input type="hidden" id="custId" th:name="id" th:placeholder="0">
 
                 <div class="input-group input-group-lg">
@@ -234,7 +234,7 @@
                     <input id="password" th:object="${password}" type="text" class="form-control" placeholder="Password">
                 </div>
             </form>
-            <button onclick="myFunction()">Test</button>
+            <button onclick="myFunction()">Login</button>
 
         </div>
     </div>
@@ -253,7 +253,7 @@
             dataType : 'json',
             success: function (data) {
                 document.getElementById("custId").value = data.id;
-                document.getElementById("hello").submit();
+                document.getElementById("loginForm").submit();
             },
             error: function (data) {
                 alert("Wrong Username and Password");

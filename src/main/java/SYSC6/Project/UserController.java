@@ -71,14 +71,13 @@ public class UserController {
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
 
-    @PostMapping("/user/upgrade")
-    public ResponseEntity<User> upgradeUser(@RequestBody User userRequest) {
-        Long id = userRequest.getId();
-        String userName = userRequest.getUsername();
-        String password = userRequest.getPassword();
-        RoleType role = userRequest.getRole();
-
-        User userTemp = userRepository.save(userRequest);
-        return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
+    @PutMapping("/user/upgrade/{id}/{role}")
+    public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @PathVariable("role") String role, @RequestBody User userRequest) {
+        User targetToUpdate = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("user not found with id: "+id));
+        targetToUpdate.setRole(RoleType.getRoleByString(role));
+        System.out.println("Targets new Role: "+targetToUpdate.getRole());
+        User userUpdated = userRepository.save(targetToUpdate);
+        return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
 }
