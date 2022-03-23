@@ -70,4 +70,6 @@ public class UserController {
         User userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword()));
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
+
+    // Method for deleting the user
 }
