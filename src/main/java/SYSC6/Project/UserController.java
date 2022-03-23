@@ -66,8 +66,19 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity<User> createUser(@RequestBody User BuddyRequest) {
-        User userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword()));
+    public ResponseEntity<User> createUser(@RequestBody User userRequest) {
+        User userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword()));
+        return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/user/upgrade")
+    public ResponseEntity<User> upgradeUser(@RequestBody User userRequest) {
+        Long id = userRequest.getId();
+        String userName = userRequest.getUsername();
+        String password = userRequest.getPassword();
+        RoleType role = userRequest.getRole();
+
+        User userTemp = userRepository.save(userRequest);
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
 }
