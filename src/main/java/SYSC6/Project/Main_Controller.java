@@ -43,33 +43,18 @@ public class Main_Controller {
 
     /**
      * If login successful it returns the id of the user and give this to the controller
+     * @param UserId
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@ModelAttribute Login login, Model model, RedirectAttributes attributes) {
-        model.addAttribute("login", login);
-        ArrayList<User> users = checkUser();
-        for (User user : users) {
-            if (user.getUsername().equals(login.getUsername())) {
-                if (user.getPassword().equals(login.getPassword())) {
-                    id = user.getId();
-                    return "redirect:/compare_talent";
-                }
-            }
-            if (login.getUsername().equals("admin")) {
-                if (login.getPassword().equals("admin")) {
-                    id = user.getId();
-                    return "redirect:/admin_portal";
-                }
-            }
-        }
-        model.addAttribute("message", "Wrong login information");
-        return "login_form";
-
-    }
-
     public String login_process(@RequestParam(value="id",required=true) String UserId){
         id = Integer.parseInt(UserId) * 1L;
+        User check_user = getUser(id);
+        if(check_user.getUsername().equals("admin")){
+            if(check_user.getPassword().equals("admin")){
+                return "redirect:/admin_portal";
+            }
+        }
         return "redirect:/user_portal";
     }
 
