@@ -25,9 +25,10 @@ public class UserController {
     }
 
     @GetMapping("/user/get/{Username}/{Password}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
+    public ResponseEntity<User> getUserByUsernameandPassword(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
         User user = userRepository.findByUsername(Username);
         ArrayList<User> passUsers = userRepository.findByPassword(Password);
+        System.out.println("Why");
         for(User s : passUsers){
             if(s.getUsername().equals(user.getUsername())){
                 return new ResponseEntity<>(user,HttpStatus.OK);
@@ -37,6 +38,18 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/user/get/{Username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
+        User user = userRepository.findByUsername(Username);
+        if(user == null){
+            System.out.println("come on");
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/user")
