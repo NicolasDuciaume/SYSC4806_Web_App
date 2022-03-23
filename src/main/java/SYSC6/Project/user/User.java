@@ -22,6 +22,8 @@ public class User implements Serializable{
     private String password;
     @Column(name = "Role")
     private RoleType role = RoleType.NO_ROLE;
+    @Column(name = "Clicks")
+    private int clicks = 0;
 
     public User(){
 
@@ -50,5 +52,13 @@ public class User implements Serializable{
         return String.format(
                 "User[id=%d, Username=%s, Password=%s, Role=%s]",
                 id, username, password, role);
+    }
+
+    public int getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(int clicks) {
+        this.clicks = clicks;
     }
 }

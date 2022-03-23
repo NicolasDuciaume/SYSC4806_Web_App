@@ -14,12 +14,17 @@
     <h1 th:text="'Your Role is: ' + ${role} + '!'" />
 
     <h1>This is a web App Created for the 4806 Project</h1>
+
+<!--    <h1 th:text="'You have clicked the CLICK ME button: ' + ${clicks} + ' times!'" />-->
 </div>
 
-<form action="#" method="post" th:action="@{/LogOut}">
-    <button class="float" type="submit">Log out</button>
-</form>
+<button onclick="clickAlert()" class="float" type="submit">CLICK ME</button>
 
+<script>
+    function clickAlert(){
+        alert("you have clicked the button")
+    }
+</script>
 <!-- TODO: change to upgrade (Upgrade method to be implemented)-->
 <form id="upgradeForm" action="#" method="post" th:action="@{/Upgrade}">
     <button onclick="upgradeUserRole()">Upgrade</button>
@@ -28,6 +33,10 @@
 <!-- TODO: change to delete_account (Delete method to be implemented)-->
 <form action="#" method="post" th:action="@{/LogOut}">
     <button class="button1" type="submit">Delete Account</button>
+</form>
+
+<form action="#" method="post" th:action="@{/LogOut}">
+    <button class="float" type="submit">Log out</button>
 </form>
 
 </body>

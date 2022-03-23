@@ -1,27 +1,32 @@
 /* general text formatting */
 
 body, header, nav, div, p, h1, h2, h3, h4 {
-   margin: 0;
-   padding: 0;    
+    margin: 0;
+    padding: 0;
 }
+
 body {
-   font-family: "Roboto", Verdana, Arial, sans-serif;
-   font-size: 13px;
+    text-align: center;
+    font-family: "Roboto", Verdana, Arial, sans-serif;
+    font-size: 13px;
     background-color: #eceff1;
 }
 
 header {
-   background-color: #37474f;
-   height: 50px;
+    background-color: #37474f;
+    height: 50px;
     padding: 15px 0 5px 25px;
 }
+
 header h1 {
     font-size: 32px;
     color: white;
 }
+
 header h1 span {
     color: #ff6e40;
 }
+
 header {
     background-color: #607d8b;
     color: #eceff1;
@@ -30,10 +35,14 @@ header {
     padding: 15px 0 5px 25px;
 }
 
+form {
+    display: inline-block;
+}
+
 button {
     height: 36px;
     background-color: #673AB7;
     color: white;
-    font-size:16px;
+    font-size: 16px;
     margin: 5px 0 0 45px;
 }

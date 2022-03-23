@@ -52,6 +52,14 @@ class UserTest {
     }
 
     @Test
+    void getClicks() {
+        assertEquals(0,user2.getClicks());
+        user2.setClicks(3);
+        assertEquals(3,user2.getClicks());
+    }
+
+
+    @Test
     void setId() {
         assertNull(user1.getId());
         assertNull(user2.getId());
@@ -92,5 +100,15 @@ class UserTest {
     void setRole() {
         user2.setRole(RoleType.PAID_USER);
         assertEquals(RoleType.PAID_USER,user2.getRole());
+    }
+
+    @Test
+    void setClicks() {
+        user2.setClicks(3);
+        assertEquals(3,user2.getClicks());
+        user2.setClicks(12);
+        assertEquals(12,user2.getClicks());
+        user2.setClicks(0);
+        assertEquals(0,user2.getClicks());
     }
 }
