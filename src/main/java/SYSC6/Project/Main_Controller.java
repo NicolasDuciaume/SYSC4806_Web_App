@@ -28,7 +28,6 @@ import java.util.List;
 public class Main_Controller {
 
     private Long id = 0L;
-    UserRepository userRepository;
 
     /**
      * Sends the User to the login page once going to the Heroku Site
@@ -128,20 +127,8 @@ public class Main_Controller {
 
     @GetMapping("/view_users")
     public String getUsers(Model model){
-        model.addAttribute("users",getAllUsers());
+        model.addAttribute("users",checkUser());
         return "redirect:/view_users";
-    }
-
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> user = new ArrayList<User>();
-
-        userRepository.findAll().forEach(user::add);
-
-        if(user.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(user,HttpStatus.OK);
-
     }
 
 
