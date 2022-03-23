@@ -1,5 +1,7 @@
 package SYSC6.Project;
 
+import java.net.HttpURLConnection;
+
 public class DeleteUserPortal {
     private User user;
     private Long id;
@@ -22,8 +24,8 @@ public class DeleteUserPortal {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/Del/%22+id.toString());
-                    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/Del/%22+id.toString()); " +
+                    "HttpURLConnection con = (HttpURLConnection)url.openConnection()");
             con.setRequestMethod("DELETE");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
             con.setRequestProperty("Accept", "application/json");
