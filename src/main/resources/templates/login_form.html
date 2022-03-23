@@ -252,11 +252,11 @@
             contentType : "application/json",
             dataType : 'json',
             success: function (data) {
-                document.getElementById("custId").value = 1
-                document.getElementById("hello").submit()
+                document.getElementById("custId").value = data.id;
+                document.getElementById("hello").submit();
             },
             error: function (data) {
-                alert("Wrong Username and Password")
+                alert("Wrong Username and Password");
             }
         });
     }

@@ -27,56 +27,91 @@ public class Main_Controller {
 
     private Long id = 0L;
 
+    /**
+     * Sends the User to the login page once going to the Heroku Site
+     * @param model
+     * @return login_form (html page)
+     */
     @GetMapping("/")
     public String login(Model model){
         model.addAttribute("Login",new Login());
         return "login_form";
     }
 
+    /**
+     * If login successful it returns the id of the user and give this to the controller
+     * @param UserId
+     * @return user_portal page
+     */
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId){
         id = Integer.parseInt(UserId) * 1L;
         return "redirect:/user_portal";
     }
 
+    /**
+     * Bring the user to the registration form
+     * @return Registration page
+     */
     @PostMapping("/Register")
     public String Register(){
         return "redirect:/Registration";
     }
 
+    /**
+     * Processes the information set within the registration form
+     * @param model
+     * @return
+     */
     @GetMapping("/Registration")
     public String Reg(Model model){
         model.addAttribute("Login",new Login());
         return "Registration";
     }
 
+    /**
+     * Takes passed variables by the user and creates a user account with that information
+     * @param user username
+     * @param pass password
+     * @return user_portal page
+     */
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
         return "redirect:/user_portal";
     }
 
+    /**
+     * Logs the user out and returns the user to the login screen
+     * @return
+     */
     @PostMapping("/LogOut")
     public String logout(){
         id = 0L;
         return "redirect:/";
     }
 
-    @GetMapping("/compare_talent")
+    /**
+     * Brings the logged in user to the user portal page
+     * @param name_place username
+     * @param model
+     * @return returns the html for the user portal
+     */
+    @GetMapping("/user_portal")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
 
         model.addAttribute("role", user.getRole().toString());
-        return "compare_talent";
+        return "user_portal";
     }
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
+            URL url = new URL ("http://localhost:8080/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -114,7 +149,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -147,7 +182,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("http://localhost:8080/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
