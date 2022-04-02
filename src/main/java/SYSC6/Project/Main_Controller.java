@@ -1,14 +1,18 @@
 package SYSC6.Project;
 
-import SYSC6.Project.user.User;
-import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,25 +22,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class Main_Controller {
 
     private Long id = 0L;
 
-    private boolean testFlag = true;
-
-    private void testInit(){
-        if(testFlag){
-            createUser("admin", "admin");
-            createUser("user", "user");
-            testFlag = false;
-        }
-    }
-
+    /**
+     * Sends the User to the login page once going to the Heroku Site
+     * @param model
+     * @return login_form (html page)
+     */
     @GetMapping("/")
-    public String login(){
-        testInit();
+    public String login(Model model){
+        model.addAttribute("Login",new Login());
         return "login_form";
     }
 
@@ -46,10 +46,13 @@ public class Main_Controller {
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
-        id = (long) Integer.parseInt(UserId);
-        if(admin.equals("admin")){
-            return "redirect:/admin_portal";
+    public String login_process(@RequestParam(value="id",required=true) String UserId){
+        id = Integer.parseInt(UserId) * 1L;
+        User check_user = getUser(id);
+        if(check_user.getUsername().equals("admin")){
+            if(check_user.getPassword().equals("admin")){
+                return "redirect:/admin_portal";
+            }
         }
         return "redirect:/user_portal";
     }
@@ -63,13 +66,23 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-
+    /**
+     * Processes the information set within the registration form
+     * @param model
+     * @return
+     */
     @GetMapping("/Registration")
-    public String Reg(){
+    public String Reg(Model model){
+        model.addAttribute("Login",new Login());
         return "Registration";
     }
 
-    /*
+    /**
+     * Takes passed variables by the user and creates a user account with that information
+     * @param user username
+     * @param pass password
+     * @return user_portal page
+     */
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
@@ -80,18 +93,6 @@ public class Main_Controller {
             }
         }
         return "redirect:/user_portal";
-    }
-    */
-
-    @PostMapping("/TempCreate")
-    public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
-        id = Integer.parseInt(TempId) * 1L;
-        if(admin.equals("admin")){
-            return "redirect:/admin_portal";
-        }
-        else{
-            return "redirect:/user_portal";
-        }
     }
 
     /**
@@ -106,58 +107,43 @@ public class Main_Controller {
 
     /**
      * Brings the logged in user to the user portal page
+     * @param name_place username
      * @param model
      * @return returns the html for the user portal
      */
     @GetMapping("/user_portal")
-    public String greeting(Model model) {
-        if(id==0){
-            return "login_form";
-        }
+    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
-        model.addAttribute("name", user.getUsername());
+        name_place = user.getUsername();
+        model.addAttribute("name", name_place);
         model.addAttribute("role", user.getRole().toString());
+        model.addAttribute("clicks", user.getClicks());
         return "user_portal";
-    }
-
-    @PutMapping("/Upgrade")
-    private String upgradeUser(){
-        return "redirect:/user_portal";
     }
 
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
-        if(id==0){
-            return "login_form";
-        }
         User user = getUser(id);
-        if(UserUtil.hasAdmin(user)){
-            model.addAttribute("name", "Admin");
-            model.addAttribute("role", user.getRole().toString());
-            return "admin_portal";
-        }
-        return "login_form";
+        name_place = user.getUsername();
+        model.addAttribute("name", "Admin");
+        user.setRole(RoleType.ADMIN);
+        model.addAttribute("role", user.getRole().toString());
+        return "admin_portal";
     }
 
     @GetMapping("/view_users")
-    public String getUsers(){
-        if(id==0){
-            return "login_form";
-        }
-        User user = getUser(id);
-        if(UserUtil.hasAdmin(user)){
-            return "view_users";
-        }
-        return logout();
+    public String getUsers(Model model){
+        model.addAttribute("users",checkUser());
+        return "redirect:/view_users";
     }
 
-    //---
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
             URL url = new URL ("http://localhost:8080/rest/api/user/add");
+//            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -190,17 +176,13 @@ public class Main_Controller {
         return x;
     }
 
-    /**
-     * Used by other Java endpoints to fetch a User
-     * @param id, id
-     * @return User
-     */
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            URL url = new URL ("http://localhost:8080/rest/api/user/add");
+//            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -217,8 +199,8 @@ public class Main_Controller {
                 System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
-                user.setId(Long.valueOf(temp.get("id").toString()));
+                user = new User(temp.get("username").toString(), temp.get("password").toString());
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -229,15 +211,12 @@ public class Main_Controller {
         return user;
     }
 
-    /**
-     * Gets all users?
-     * @return
-     */
     public ArrayList<User> checkUser(){
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user");
+//            URL url = new URL ("http://localhost:8080/rest/api/user/add");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -268,86 +247,5 @@ public class Main_Controller {
             System.out.println("Error");
         }
         return users;
-    }
-
-
-    public User DelUser(Long id){
-        JSONParser jsonParser = new JSONParser();
-        User user = new User();
-        System.out.println(id);
-        try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/Del/"+id.toString());
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("DELETE");
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
-
-            try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println(response);
-                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString());
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (IOException e){
-            System.out.println("Error");
-        }
-        return user;
-    }
-
-    /**
-     * Use to change a users role
-     * @param id, id
-     * @param role, in the payload, String version of the RoleType
-     * @return
-     */
-    public User changeUserRole(Long id, RoleType role){
-        JSONParser jsonParser = new JSONParser();
-        User user = new User();
-        System.out.println(id);
-        try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/upgrade/"+id.toString());
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
-            String jsonInputString = "{" + '"' + "role" + '"' + ":" + '"' + role + '"'+"}";
-            //System.out.println(jsonInputString);
-            try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println("response: "+response);
-                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
-                user.setId(Long.valueOf(temp.get("id").toString()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (IOException e){
-            System.out.println("Error changeUserRole");
-        }
-        return user;
     }
 }
