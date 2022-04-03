@@ -10,8 +10,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080/")
+
 //@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {
