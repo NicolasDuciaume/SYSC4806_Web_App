@@ -1,8 +1,8 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
+import SYSC6.Project.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 

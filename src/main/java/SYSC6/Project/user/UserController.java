@@ -1,16 +1,15 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
+import SYSC6.Project.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {

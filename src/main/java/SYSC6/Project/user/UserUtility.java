@@ -1,4 +1,6 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
+
+import SYSC6.Project.RoleType;
 
 import java.util.Optional;
 

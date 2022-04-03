@@ -1,15 +1,13 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class Main_Controller {
@@ -33,8 +30,8 @@ public class Main_Controller {
      */
     @GetMapping("/")
     public String login(Model model){
-        model.addAttribute("Login",new Login());
-        return "login_form";
+        //model.addAttribute("Login",new Login());
+        return "view_users"; //TODO FOR TESTING
     }
 
     /**
@@ -139,7 +136,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
+            URL url = new URL ("http://localhost:8080/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -177,7 +174,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -210,7 +207,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("http://localhost:8080/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
