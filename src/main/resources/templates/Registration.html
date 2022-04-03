@@ -249,6 +249,7 @@
         $.ajax({
             type: "GET",
             url: "http://localhost:8080/rest/api/user/get/" + document.getElementById("username").value,
+            // url: "https://projectsysc4806.herokuapp.com/rest/api/user/get/" + document.getElementById("username").value,
             contentType : "application/json",
             success: function (data) {
                 document.getElementById("userHidden").value = document.getElementById("username").value

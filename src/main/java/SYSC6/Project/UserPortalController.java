@@ -4,7 +4,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080/")
+//@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
 @RestController
 @RequestMapping("/rest/api/user_portal")
 public class UserPortalController {
@@ -15,16 +16,34 @@ public class UserPortalController {
     public String enterPortal(Model model){
         // send to upgrade page, for now sends back to main page
         String userName = model.getAttribute("name").toString();
-        return "redirect:/"; // TODO change this to upgrade page once that has been added, for now redirect to main page
+        return "redirect:/user_portal"; // TODO change this to upgrade page once that has been added, for now redirect to main page
     }
 
-    private int incrementClicks(@RequestParam(value="clicks",required=true) String clicks){
+    /**
+     * Actions when user enters the app via user portal
+     * Here we will check if an UNPAID user has reached their limit and display it
+     * A PAID user will not have a limit applied to them
+     * @param model
+     * @return
+     */
+    @GetMapping("/app_proxy")
+    public String enterApp(Model model){
+        // send to upgrade page, for now sends back to main page
+        String userName = model.getAttribute("name").toString();
+        return "redirect:/user_portal"; // TODO change this to upgrade page once that has been added, for now redirect to main page
+    }
+
+    /**
+     * @param clicks
+     * @return
+     */
+    @PostMapping("/Click")
+    public String incrementClicks(@RequestParam(value="clicks",required=true) String clicks){
         // increment the number of times the button has been clicked
         int numClicks = Integer.parseInt(clicks);
         numClicks++;
 
-
-        return numClicks;
+        return "redirect:/user_portal";
     }
 
     /**
@@ -34,17 +53,12 @@ public class UserPortalController {
      */
 
     private boolean checkRole(@RequestParam(value="role",required=true) String role){
-        if (role == RoleType.FREE_USER.toString()){
-            limitExists = true;
-        }
-        else if (role == RoleType.PAID_USER.toString()){
+        if (role == RoleType.PAID_USER.toString()){
 
             limitExists = false;
         }
-        else{   // if user role is ADMIN or NO_ROLE
-            // Admins should be redirected to admin page
-            // (although admins should never see this page to begin with)
-            // By default we will apply a limit
+        else{
+            // By default, we will apply a limit i.e. assume it's a free user
             limitExists = true;
         }
         System.out.println(limitExists);

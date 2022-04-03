@@ -18,13 +18,11 @@
 <!--    <h1 th:text="'You have clicked the CLICK ME button: ' + ${clicks} + ' times!'" />-->
 </div>
 
-<button onclick="clickAlert()" class="float" type="submit">CLICK ME</button>
 
-<script>
-    function clickAlert(){
-        alert("you have clicked the button")
-    }
-</script>
+<form action="#" method="post" th:action="@{/Click}">
+    <button class="float" type="submit">Enter App</button>
+</form>
+
 <!-- TODO: change to upgrade (Upgrade method to be implemented)-->
 <form id="upgradeForm" action="#" method="post" th:action="@{/Upgrade}">
     <button onclick="upgradeUserRole()">Upgrade</button>
