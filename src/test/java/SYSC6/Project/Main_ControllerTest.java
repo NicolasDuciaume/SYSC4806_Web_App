@@ -30,7 +30,7 @@ class Main_ControllerTest {
 
     @Test
     void login_process() throws Exception {
-        this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/user_portal"));
+        this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/admin_portal"));
     }
 
     @Test
