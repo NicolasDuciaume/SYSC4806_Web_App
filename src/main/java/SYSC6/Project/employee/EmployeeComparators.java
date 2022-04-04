@@ -26,24 +26,8 @@ public final class EmployeeComparators {
         map.put(new Key("name", Direction.desc), Comparator.comparing(Employee::getName)
                 .reversed());
 
-        map.put(new Key("start_date", Direction.asc), Comparator.comparing(Employee::getStartDate));
-        map.put(new Key("start_date", Direction.desc), Comparator.comparing(Employee::getStartDate)
-                .reversed());
-
-        map.put(new Key("position", Direction.asc), Comparator.comparing(Employee::getPosition));
-        map.put(new Key("position", Direction.desc), Comparator.comparing(Employee::getPosition)
-                .reversed());
-
-        map.put(new Key("salary", Direction.asc), Comparator.comparing(Employee::getSalary));
-        map.put(new Key("salary", Direction.desc), Comparator.comparing(Employee::getSalary)
-                .reversed());
-
-        map.put(new Key("office", Direction.asc), Comparator.comparing(Employee::getOffice));
-        map.put(new Key("office", Direction.desc), Comparator.comparing(Employee::getOffice)
-                .reversed());
-
-        map.put(new Key("extn", Direction.asc), Comparator.comparing(Employee::getExtn));
-        map.put(new Key("extn", Direction.desc), Comparator.comparing(Employee::getExtn)
+        map.put(new Key("role", Direction.asc), Comparator.comparing(Employee::getRole));
+        map.put(new Key("role", Direction.desc), Comparator.comparing(Employee::getRole)
                 .reversed());
     }
 

@@ -47,20 +47,18 @@
             <table id="example" class="table table-bordered table-responsive" style="width: 100%">
                 <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Role</th>
+                    <th>Interactions</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
+                    <th>Id</th>
                     <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Role</th>
+                    <th>Interactions</th>
                 </tr>
                 </tfoot>
             </table>
@@ -74,20 +72,18 @@
             <table id="exampleArray" class="table table-bordered table-responsive" style="width: 100%">
                 <thead>
                 <tr>
-                    <th style="width:20%">Name</th>
-                    <th style="width:20%">Position</th>
-                    <th style="width:20%">Office</th>
-                    <th style="width:20%">Start date</th>
-                    <th style="width:20%">Salary</th>
+                    <th style="width:20%">Id</th>
+                    <th style="width:30%">Name</th>
+                    <th style="width:30%">Role</th>
+                    <th style="width:20%">Interactions</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
+                    <th>Id</th>
                     <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Role</th>
+                    <th>Interactions</th>
                 </tr>
                 </tfoot>
             </table>
@@ -102,7 +98,7 @@
 <script th:src="@{assets/datatable/datatables.js}"></script>
 
 <script>
-    $('#example').DataTable({
+    var table = $('#example').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -115,13 +111,17 @@
             }
         },
         "columns": [
-            {"data": "name", "width": "20%"},
-            {"data": "position","width": "20%"},
-            {"data": "office", "width": "20%"},
-            {"data": "start_date", "width": "20%"},
-            {"data": "salary", "width": "20%"}
-        ]
+            {"data": "id"},
+            {"data": "name"},
+            {"data": "role"},
+            {"data": null, "targets": -1, "defaultContent": "<button>Toggle Role</button>"}
+        ],
     });
+
+    $('#example tbody').on( 'click', 'button', function () {
+        var data = table.row( $(this).parents('tr') ).data();
+        alert( data[1] +"'s role is: "+ data[ 2 ] );
+    } );
 
     $('#exampleArray').DataTable({
         "processing": true,

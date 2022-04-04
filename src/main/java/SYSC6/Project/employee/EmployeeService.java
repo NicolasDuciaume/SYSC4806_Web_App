@@ -27,7 +27,7 @@ public class EmployeeService {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
     public PageArray getEmployeesArray(PagingRequest pagingRequest) {
-        pagingRequest.setColumns(Stream.of("name", "position", "office", "start_date", "salary")
+        pagingRequest.setColumns(Stream.of("id", "name", "role")
                 .map(Column::new)
                 .collect(Collectors.toList()));
         Page<Employee> employeePage = getEmployees(pagingRequest);
@@ -44,9 +44,7 @@ public class EmployeeService {
     }
 
     private List<String> toStringList(Employee employee) {
-        return Arrays.asList(employee.getName(), employee.getPosition(), employee.getOffice(), sdf.format(employee.getStartDate()),
-                employee.getSalary()
-                        .toString());
+        return Arrays.asList(employee.getId().toString(), employee.getName(), employee.getRole().toString(), "");
     }
 
     public Page<Employee> getEmployees(PagingRequest pagingRequest) {
@@ -54,7 +52,7 @@ public class EmployeeService {
 
         try {
             List<Employee> employees = objectMapper.readValue(getClass().getClassLoader()
-                            .getResourceAsStream("employees.json"),
+                            .getResourceAsStream("users.json"),
                     new TypeReference<List<Employee>>() {
                     });
 
@@ -99,10 +97,7 @@ public class EmployeeService {
         return employee -> employee.getName()
                 .toLowerCase()
                 .contains(value)
-                || employee.getPosition()
-                .toLowerCase()
-                .contains(value)
-                || employee.getOffice()
+                || employee.getRole().toString()
                 .toLowerCase()
                 .contains(value);
     }
