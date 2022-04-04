@@ -100,7 +100,7 @@ public class UserController {
     @PostMapping("/user/add")
     public ResponseEntity<User> createUser(@RequestBody User BuddyRequest) {
         User userTemp = new User();
-        if(BuddyRequest.getUsername().equals("admin") && BuddyRequest.getPassword().equals("admin")){
+        if(BuddyRequest.getUsername().equals("admin") && BuddyRequest.getPassword().equals("admin123!")){
             userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword(), RoleType.ADMIN));
         }
         else{
