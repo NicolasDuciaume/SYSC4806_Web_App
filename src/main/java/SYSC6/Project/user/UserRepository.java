@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     List<User> findByRole(RoleType aRole);
     User findByUsername(String Username);
     ArrayList<User> findByPassword(String Password);
+
+    @Transactional
+    void deleteById(Long Id);
 }

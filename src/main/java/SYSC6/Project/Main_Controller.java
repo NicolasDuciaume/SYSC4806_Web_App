@@ -1,15 +1,18 @@
 package SYSC6.Project;
 
-import SYSC6.Project.user.User;
-import SYSC6.Project.user.UserRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,25 +22,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class Main_Controller {
 
     private Long id = 0L;
-    private boolean testFlag = true;
-    /**
-     * Sends the User to the login page once going to the Heroku Site
-     * @param model
-     * @return login_form (html page)
-     */
+
+
     @GetMapping("/")
-    public String login(Model model){
-        if(testFlag){
-            createUser("Superuser","admin");
-            testFlag = false;
-        }
-        //model.addAttribute("Login",new Login());
-        return "view_users"; //TODO FOR TESTING
+    public String login(){
+        return "login_form";
     }
 
     /**
@@ -46,13 +41,10 @@ public class Main_Controller {
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@RequestParam(value="id",required=true) String UserId){
+    public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
         }
         return "redirect:/user_portal";
     }
@@ -66,27 +58,35 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-    /**
-     * Processes the information set within the registration form
-     * @param model
-     * @return
-     */
+
     @GetMapping("/Registration")
-    public String Reg(Model model){
-        model.addAttribute("Login",new Login());
+    public String Reg(){
         return "Registration";
     }
 
-    /**
-     * Takes passed variables by the user and creates a user account with that information
-     * @param user username
-     * @param pass password
-     * @return user_portal page
-     */
+    /*
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
+        User check_user = getUser(id);
+        if(check_user.getUsername().equals("admin")){
+            if(check_user.getPassword().equals("admin")){
+                return "redirect:/admin_portal";
+            }
+        }
         return "redirect:/user_portal";
+    }
+    */
+
+    @PostMapping("/TempCreate")
+    public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
+        id = Integer.parseInt(TempId) * 1L;
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
+        }
+        else{
+            return "redirect:/user_portal";
+        }
     }
 
     /**
@@ -109,7 +109,6 @@ public class Main_Controller {
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
-        model.addAttribute("userId", id);
         model.addAttribute("name", name_place);
 
         model.addAttribute("role", user.getRole().toString());
@@ -244,5 +243,40 @@ public class Main_Controller {
             System.out.println("Error");
         }
         return users;
+    }
+
+
+    public User DelUser(Long id){
+        JSONParser jsonParser = new JSONParser();
+        User user = new User();
+        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/Del/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("DELETE");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response);
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                //System.out.println(temp.get("username").toString());
+                user = new User(temp.get("username").toString(), temp.get("password").toString());
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error");
+        }
+        return user;
     }
 }
