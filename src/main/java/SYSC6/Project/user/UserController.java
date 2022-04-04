@@ -99,13 +99,13 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity<User> createUser(@RequestBody User BuddyRequest) {
+    public ResponseEntity<User> createUser(@RequestBody User userRequest) {
         User userTemp = new User();
-        if(BuddyRequest.getUsername().equals("admin") && BuddyRequest.getPassword().equals("admin")){
-            userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword(), RoleType.ADMIN));
+        if(userRequest.getUsername().equals("admin") && userRequest.getPassword().equals("admin")){
+            userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword(), RoleType.ADMIN));
         }
         else{
-            userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword(), RoleType.FREE_USER));
+            userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword(), RoleType.FREE_USER));
         }
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
@@ -116,11 +116,11 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/user/upgrade/{id}/{role}")
-    public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @PathVariable("role") String role, @RequestBody User userRequest) {
+    @PostMapping("/user/upgrade/{id}")
+    public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @RequestBody User userRequest) {
         User targetToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found with id: "+id));
-        targetToUpdate.setRole(RoleType.getRoleByString(role));
+                .orElseThrow(() -> new RuntimeException("user not found with id: "+id)); //TODO Not an Ideal way to handle this, return appropriate 400 code
+        targetToUpdate.setRole(userRequest.getRole());
         System.out.println("Targets new Role: "+targetToUpdate.getRole());
         User userUpdated = userRepository.save(targetToUpdate);
         return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);

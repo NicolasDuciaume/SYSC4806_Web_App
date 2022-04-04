@@ -1,5 +1,6 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -8,12 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.relation.Role;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,10 +28,17 @@ public class Main_Controller {
 
     private Long id = 0L;
 
+    private boolean testFlag = true;
 
     @GetMapping("/")
     public String login(){
-        return "login_form";
+        if(testFlag){
+            Long one = createUser("admin", "admin");
+            Long two = createUser("user", "user");
+            changeUserRole(two, RoleType.PAID_USER);
+            testFlag = false;
+        }
+        return "view_users";
     }
 
     /**
@@ -44,7 +50,7 @@ public class Main_Controller {
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
         if(admin.equals("admin")){
-            return "redirect:/admin_portal";
+            return "view_users"; //TODO TESTING REDIRECT TO VIEW_USERS
         }
         return "redirect:/user_portal";
     }
@@ -276,6 +282,46 @@ public class Main_Controller {
         }
         catch (IOException e){
             System.out.println("Error");
+        }
+        return user;
+    }
+
+    public User changeUserRole(Long id, RoleType role){
+        JSONParser jsonParser = new JSONParser();
+        User user = new User();
+        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/upgrade/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+            String jsonInputString = "{" + '"' + "role" + '"' + ":" + '"' + role + '"'+"}";
+            //System.out.println(jsonInputString);
+            try(OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println("response: "+response);
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                //System.out.println(temp.get("username").toString());
+                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error changeUserRole");
         }
         return user;
     }

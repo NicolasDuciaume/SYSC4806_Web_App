@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <title>Spring Boot Thymeleaf Application - Bootstrap DataTable</title>
 
-    <link th:rel="stylesheet" th:href="@{assets/datatable/datatables.css}"/>
-    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{datatable/datatables.css}"/>
+    <link th:rel="stylesheet" th:href="@{css/bootstrap.css} "/>
 
 </head>
 <body>
@@ -47,9 +47,9 @@
             <table id="example" class="table table-bordered table-responsive" style="width: 100%">
                 <thead>
                 <tr>
-                    <th style="width:33%">Username</th>
-                    <th style="width:33%">Role</th>
-                    <th style="width:33%">Interactions</th>
+                    <th style="width:50%">Username</th>
+                    <th style="width:100%">Role</th>
+                    <th style="width:100%">Interactions</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -91,18 +91,17 @@
 </div>
 
 
-<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<script th:src="@{assets/datatable/datatables.js}"></script>
-<!--<script th:src="@{assets/datatable/jquery.dataTables.min.js}"></script>-->
+<script th:src="@{Javascript/jquery.js}"></script>
+<script th:src="@{Javascript/popper.js}"></script>
+<script th:src="@{Javascript/bootstrap.js}"></script>
+<script th:src="@{datatable/datatables.js}"></script>
 
 <script>
     var table = $('#example').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/users",
+            "url": "/employees/users",
             "type": "POST",
             "dataType": "json",
             "contentType": "application/json",
@@ -120,7 +119,7 @@
     $('#example tbody').on( 'click', 'button', function () {
         let data = table.row( $(this).parents('tr') ).data();
         console.log( data ); //TODO DEBUG
-        alert( data["name"] +"'s role is: "+ data["role"] );
+        alert( data["username"] +"'s role is: "+ data["role"] );
     } );
 
     /*
