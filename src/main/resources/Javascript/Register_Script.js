@@ -1,18 +1,30 @@
 function myFunction() {
-    console.log(document.getElementById("username").value);
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/rest/api/user/get/" + document.getElementById("username").value,
-        contentType : "application/json",
-        success: function (data) {
-            document.getElementById("userHidden").value = document.getElementById("username").value
-            document.getElementById("passHidden").value = document.getElementById("password").value
-            createFunction()
-        },
-        error: function (data) {
-            alert("Username already in use");
-        }
-    });
+    var pass = document.getElementById("password").value
+    var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    var format2 = /[0123456789]/;
+
+    console.log(pass.length > 6)
+    console.log(format.test(pass))
+    console.log(format2.test(pass))
+
+    if((pass.length > 6) && (format.test(pass)) && (format2.test(pass))){
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/rest/api/user/get/" + document.getElementById("username").value,
+            contentType : "application/json",
+            success: function (data) {
+                document.getElementById("userHidden").value = document.getElementById("username").value
+                document.getElementById("passHidden").value = document.getElementById("password").value
+                createFunction()
+            },
+            error: function (data) {
+                alert("Username already in use");
+            }
+        });
+    }
+    else{
+        alert("Password must adhere to guidelines")
+    }
 }
 
 function createFunction(){
