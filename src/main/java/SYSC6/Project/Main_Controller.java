@@ -1,10 +1,12 @@
 package SYSC6.Project;
 
 import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,10 @@ public class Main_Controller {
 
     private Long id = 0L;
 
+    public Main_Controller() {
+        createUser("Superuser","admin");
+    }
+
     /**
      * Sends the User to the login page once going to the Heroku Site
      * @param model
@@ -30,6 +36,7 @@ public class Main_Controller {
      */
     @GetMapping("/")
     public String login(Model model){
+        //createUser("Superuser","admin");
         //model.addAttribute("Login",new Login());
         return "view_users"; //TODO FOR TESTING
     }

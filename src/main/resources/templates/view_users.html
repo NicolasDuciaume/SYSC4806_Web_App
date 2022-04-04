@@ -47,16 +47,14 @@
             <table id="example" class="table table-bordered table-responsive" style="width: 100%">
                 <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Interactions</th>
+                    <th style="width:33%">Name</th>
+                    <th style="width:33%">Role</th>
+                    <th style="width:33%">Interactions</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
+                    <th>Username</th>
                     <th>Role</th>
                     <th>Interactions</th>
                 </tr>
@@ -65,7 +63,7 @@
         </div>
     </div>
 
-
+    <!--
     <div class="row">
         <div class="col-lg-10 mt-5 mb-5">
             <h3>Datatable using list of Arrays in data parameter</h3>
@@ -89,6 +87,7 @@
             </table>
         </div>
     </div>
+    -->
 </div>
 
 
@@ -96,13 +95,14 @@
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{assets/datatable/datatables.js}"></script>
+<!--<script th:src="@{assets/datatable/jquery.dataTables.min.js}"></script>-->
 
 <script>
     var table = $('#example').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/employees",
+            "url": "/users",
             "type": "POST",
             "dataType": "json",
             "contentType": "application/json",
@@ -111,18 +111,19 @@
             }
         },
         "columns": [
-            {"data": "id"},
-            {"data": "name"},
+            {"data": "username"},
             {"data": "role"},
-            {"data": null, "targets": -1, "defaultContent": "<button>Toggle Role</button>"}
+            {"data": null, "defaultContent": "<button>Toggle Role</button>"}
         ],
     });
 
     $('#example tbody').on( 'click', 'button', function () {
-        var data = table.row( $(this).parents('tr') ).data();
-        alert( data[1] +"'s role is: "+ data[ 2 ] );
+        let data = table.row( $(this).parents('tr') ).data();
+        console.log( data ); //TODO DEBUG
+        alert( data["name"] +"'s role is: "+ data["role"] );
     } );
 
+    /*
     $('#exampleArray').DataTable({
         "processing": true,
         "serverSide": true,
@@ -136,6 +137,7 @@
             }
         }
     });
+    */
 </script>
 
 </body>
