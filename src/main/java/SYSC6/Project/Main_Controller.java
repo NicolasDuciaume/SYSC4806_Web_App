@@ -41,13 +41,10 @@ public class Main_Controller {
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@RequestParam(value="id",required=true) String UserId){
+    public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
         }
         return "redirect:/user_portal";
     }
