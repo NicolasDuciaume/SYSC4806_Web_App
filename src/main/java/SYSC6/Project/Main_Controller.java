@@ -24,11 +24,7 @@ import java.util.ArrayList;
 public class Main_Controller {
 
     private Long id = 0L;
-
-    public Main_Controller() {
-        createUser("Superuser","admin");
-    }
-
+    private boolean testFlag = true;
     /**
      * Sends the User to the login page once going to the Heroku Site
      * @param model
@@ -36,7 +32,10 @@ public class Main_Controller {
      */
     @GetMapping("/")
     public String login(Model model){
-        //createUser("Superuser","admin");
+        if(testFlag){
+            createUser("Superuser","admin");
+            testFlag = false;
+        }
         //model.addAttribute("Login",new Login());
         return "view_users"; //TODO FOR TESTING
     }
