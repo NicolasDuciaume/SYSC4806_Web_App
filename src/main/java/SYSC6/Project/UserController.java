@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {
@@ -69,5 +69,11 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User BuddyRequest) {
         User userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword()));
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/user/Del/{id}")
+    public ResponseEntity<HttpStatus> deleteBuddy(@PathVariable("id") long id) {
+        userRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
