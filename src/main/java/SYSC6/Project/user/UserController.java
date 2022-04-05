@@ -19,6 +19,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * Takes a user id and fetches the user associated with that id
+     * @param id the id of the user you which to return
+     * @return the user profil in json format
+     */
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User user = userRepository.findById(id)
@@ -26,29 +31,20 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/user/get/{Username}/{Password}")
-    public ResponseEntity<User> getUserByUsernameandPassword(@PathVariable("Username") String Username, @PathVariable("Password") String Password) {
-        User user = userRepository.findByUsername(Username);
-        ArrayList<User> passUsers = userRepository.findByPassword(Password);
-        if (passUsers == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        for(User s : passUsers){
-            if(s.getUsername().equals(user.getUsername())){
-                return new ResponseEntity<>(user,HttpStatus.OK);
-            }
-        }
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
+    /**
+     * Takes the body of user details and fetches to see if the login information matches with a user in the
+     * Database then returns that user information if it finds a match or a bad request if it does not
+     * @param BuddyRequest The user detail
+     * @return either a bad request or the user detail
+     */
     @PostMapping("/user/get/login")
     public ResponseEntity<User> Login(@RequestBody User BuddyRequest) {
         User user = userRepository.findByUsername(BuddyRequest.getUsername());
-        ArrayList<User> passUsers = userRepository.findByPassword(BuddyRequest.getPassword());
+        List<User> passUsers = userRepository.findByPassword(BuddyRequest.getPassword());
         if (passUsers == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if(user == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         for(User s : passUsers){
@@ -56,12 +52,15 @@ public class UserController {
                 return new ResponseEntity<>(user,HttpStatus.OK);
             }
         }
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Finds a user with the help of the Username
+     * Seeing the usernames must be unique this method is used to check if the new username is already taken
+     * @param Username username to be checked
+     * @return ok status if the username is available and bad request if not
+     */
     @GetMapping("/user/get/{Username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("Username") String Username) {
         User user = userRepository.findByUsername(Username);
@@ -73,6 +72,10 @@ public class UserController {
         }
     }
 
+    /**
+     * This method fecthes and returns all users within the database
+     * @return All the users in the database if not empty and bed request if it is empty
+     */
     @GetMapping("/user")
     public ResponseEntity<List<User>> getAllUsers(){
 
@@ -84,6 +87,12 @@ public class UserController {
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
+    /**
+     * Method is used to take in user details and find if that user is an admin of basic user then creates
+     * a new account within the database accordingly
+     * @param userRequest The User details
+     * @return a new user account
+     */
     @PostMapping("/user/add")
     public ResponseEntity<User> createUser(@RequestBody User userRequest) {
         User userTemp;
