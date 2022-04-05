@@ -1,6 +1,9 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
 import SYSC6.Project.RoleType;
+import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserRepository;
+import SYSC6.Project.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
