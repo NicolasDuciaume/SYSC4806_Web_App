@@ -1,9 +1,14 @@
 package SYSC6.Project.user;
 
+import SYSC6.Project.RoleType;
+
 public class UserUtil {
 
-    public static User setRoleToUpgradeRole(User user){
+    public static void setRoleToUpgradeRole(User user){
         user.setRole(user.getRole().getUpgradeRole().get());
-        return user;
+    }
+
+    public static boolean hasAdmin(User user){
+        return user.getRole() == RoleType.ADMIN;
     }
 }

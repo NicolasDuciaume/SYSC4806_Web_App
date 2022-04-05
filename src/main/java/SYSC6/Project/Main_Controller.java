@@ -1,6 +1,7 @@
 package SYSC6.Project;
 
 import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,8 +28,8 @@ public class Main_Controller {
 
     private void testInit(){
         if(testFlag){
-            Long one = createUser("admin", "admin");
-            Long two = createUser("user", "user");
+            createUser("admin", "admin");
+            createUser("user", "user");
             testFlag = false;
         }
     }
@@ -46,7 +47,7 @@ public class Main_Controller {
      */
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
-        id = Integer.parseInt(UserId) * 1L;
+        id = (long) Integer.parseInt(UserId);
         if(admin.equals("admin")){
             return "redirect:/admin_portal";
         }
@@ -105,16 +106,16 @@ public class Main_Controller {
 
     /**
      * Brings the logged in user to the user portal page
-     * @param name_place username
      * @param model
      * @return returns the html for the user portal
      */
     @GetMapping("/user_portal")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+    public String greeting(Model model) {
+        if(id==0){
+            return "login_form";
+        }
         User user = getUser(id);
-        name_place = user.getUsername();
-        model.addAttribute("name", name_place);
-
+        model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
@@ -126,19 +127,31 @@ public class Main_Controller {
 
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+        if(id==0){
+            return "login_form";
+        }
         User user = getUser(id);
-        name_place = user.getUsername();
-        model.addAttribute("name", "Admin");
-        user.setRole(RoleType.ADMIN);
-        model.addAttribute("role", user.getRole().toString());
-        return "admin_portal";
+        if(UserUtil.hasAdmin(user)){
+            model.addAttribute("name", "Admin");
+            model.addAttribute("role", user.getRole().toString());
+            return "admin_portal";
+        }
+        return "login_form";
     }
 
     @GetMapping("/view_users")
     public String getUsers(){
-        return "view_users";
+        if(id==0){
+            return "login_form";
+        }
+        User user = getUser(id);
+        if(UserUtil.hasAdmin(user)){
+            return "view_users";
+        }
+        return logout();
     }
 
+    //---
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
@@ -177,6 +190,11 @@ public class Main_Controller {
         return x;
     }
 
+    /**
+     * Used by other Java endpoints to fetch a User
+     * @param id, id
+     * @return User
+     */
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
@@ -199,8 +217,8 @@ public class Main_Controller {
                 System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString());
-
+                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -211,6 +229,10 @@ public class Main_Controller {
         return user;
     }
 
+    /**
+     * Gets all users?
+     * @return
+     */
     public ArrayList<User> checkUser(){
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
@@ -283,6 +305,12 @@ public class Main_Controller {
         return user;
     }
 
+    /**
+     * Use to change a users role
+     * @param id, id
+     * @param role, in the payload, String version of the RoleType
+     * @return
+     */
     public User changeUserRole(Long id, RoleType role){
         JSONParser jsonParser = new JSONParser();
         User user = new User();

@@ -1,24 +1,11 @@
 package SYSC6.Project.user;
 
 import SYSC6.Project.RoleType;
-import SYSC6.Project.user.User;
-import SYSC6.Project.user.UserRepository;
-import SYSC6.Project.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -88,9 +75,8 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<List<User>> getAllUsers(){
-        List<User> user = new ArrayList<User>();
 
-        userRepository.findAll().forEach(user::add);
+        List<User> user = new ArrayList<>(userRepository.findAll());
 
         if(user.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -100,7 +86,7 @@ public class UserController {
 
     @PostMapping("/user/add")
     public ResponseEntity<User> createUser(@RequestBody User userRequest) {
-        User userTemp = new User();
+        User userTemp;
         if(userRequest.getUsername().equals("admin") && userRequest.getPassword().equals("admin")){
             userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword(), RoleType.ADMIN));
         }
@@ -118,25 +104,28 @@ public class UserController {
 
     @PostMapping("/user/changeRole/{id}")
     public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @RequestBody User userRequest) {
-        User targetToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found with id: "+id)); //TODO Not an Ideal way to handle this, return appropriate 400 code
-        targetToUpdate.setRole(userRequest.getRole());
-        System.out.println("Targets new Role: "+targetToUpdate.getRole());
-        User userUpdated = userRepository.save(targetToUpdate);
-        return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
+        Optional<User> userOptional = userRepository.findById(id);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User floatingUser = userOptional.get();
+        floatingUser.setRole(userRequest.getRole());
+        System.out.println("Targets new Role: "+floatingUser.getRole());
+        floatingUser = userRepository.save(floatingUser);
+        return new ResponseEntity<>(floatingUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/user/upgrade/{id}")
     public ResponseEntity<User> upgradeUserRole(@PathVariable("id") long id) {
-        Optional<User> targetToUpdate = userRepository.findById(id);
-        if(!targetToUpdate.isPresent()){
+        Optional<User> userOptional = userRepository.findById(id);
+        if(!userOptional.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        User updated = targetToUpdate.get();
-        if (targetToUpdate.get().getRole().isUpgradeable()){
-            updated = UserUtil.setRoleToUpgradeRole(targetToUpdate.get());
+        User floatingUser = userOptional.get();
+        if (floatingUser.getRole().isUpgradeable()){
+            UserUtil.setRoleToUpgradeRole(floatingUser);
         }
-        User userUpdated = userRepository.save(updated);
+        User userUpdated = userRepository.save(floatingUser);
         return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
 }

@@ -1,7 +1,5 @@
 package SYSC6.Project;
 
-import javax.management.relation.Role;
-import java.util.Locale;
 import java.util.Optional;
 
 public enum RoleType {
