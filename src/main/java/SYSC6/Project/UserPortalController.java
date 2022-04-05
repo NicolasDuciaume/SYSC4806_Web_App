@@ -6,10 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = "http://localhost:8080/")
+@CrossOrigin(origins = "http://localhost:8080")
 //@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
 @Controller
-@RequestMapping("/rest/api/user_portal")
+//@RequestMapping("/rest/api/user_portal")
 public class UserPortalController {
     private static int LIMIT = 1000;
     private boolean limitExists = false;
@@ -29,6 +29,16 @@ public class UserPortalController {
         id = Integer.parseInt(UserId) * 1L;
         checkRole(role);
         model.addAttribute("limitExists", limitExists);
+
+        System.out.println("Entered user portal");
+
+        return "redirect:/user_portal";
+    }
+
+    @PostMapping("/GoBack")
+    public String goBack(){
+
+        System.out.println("Back from app_proxy");
 
         return "redirect:/user_portal";
     }
@@ -55,10 +65,11 @@ public class UserPortalController {
      */
     @PostMapping("/Click")
     public String incrementClicks(Model model){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found"));
-        int numClicks = user.getClicks();
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("user not found"));
+//        int numClicks = user.getClicks();
 
+        int numClicks = 0;
         // Check if a limit has been reached only if it is applied (free user only)
         if (limitExists) {
             if (numClicks == LIMIT) {
@@ -71,8 +82,8 @@ public class UserPortalController {
         }
         numClicks++;
 
-        user.setClicks(numClicks);
-        userRepository.save(user); // update clicks in database
+//        user.setClicks(numClicks);
+//        userRepository.save(user); // update clicks in database
 
         model.addAttribute("limitExists", limitExists);
 
@@ -87,11 +98,11 @@ public class UserPortalController {
      * @param model
      * @return
      */
-    @PostMapping("/app_proxy")
+    @GetMapping("/app_proxy")
     public String enterApp(Model model){
         // send to upgrade page, for now sends back to main page
-        String userName = model.getAttribute("name").toString();
-        return "redirect:/user_portal";
+//        String userName = model.getAttribute("name").toString();
+        return "app_proxy";
     }
 
 //     TODO i think this should be moved to delete and upgrade controller classes since the functionality
