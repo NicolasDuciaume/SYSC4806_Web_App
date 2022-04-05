@@ -133,19 +133,19 @@ public class Main_Controller {
         return "redirect:/user_portal";
     }
 
-    @GetMapping("/admin_portal")
-    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
-        if(id==0){
-            return "login_form";
-        }
-        User user = getUser(id);
-        if(UserUtil.hasAdmin(user)){
-            model.addAttribute("name", "Admin");
-            model.addAttribute("role", user.getRole().toString());
-            return "admin_portal";
-        }
-        return "login_form";
-    }
+//    @GetMapping("/admin_portal")
+//    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+//        if(id==0){
+//            return "login_form";
+//        }
+//        User user = getUser(id);
+//        if(UserUtil.hasAdmin(user)){
+//            model.addAttribute("name", "Admin");
+//            model.addAttribute("role", user.getRole().toString());
+//            return "admin_portal";
+//        }
+//        return "login_form";
+//    }
 
     @GetMapping("/view_users")
     public String getUsers(){

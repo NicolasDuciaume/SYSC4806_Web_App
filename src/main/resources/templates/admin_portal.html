@@ -7,15 +7,13 @@
 <body>
 
 <div style="text-align:center">
-    <h2 th:text="'HELLOOO BIG BOSS, ' + ${name} + '!'" />
-    <h2>Welcome</h2>
-    <h2 th:text="'Your Role is: ' + ${role} + '!'" />
-    <h2>This is a web App Created for the 4806 Project</h2>
+    <h2 th:text="'Welcome to the Admin Portal, ' + ${name} + '!'"></h2>
+    <h2 th:text="'Your Role is: ' + ${role}"></h2>
 </div>
 <form action="#" th:action="@{/LogOut}" method="post">
     <button type="submit" class="float">Log out</button>
 </form>
-<form action="#" th:action="@{/view_users}" method="get">
+<form action="#" th:action="@{/view_users}" method="post">
     <button type="submit" class="float">View list of Users</button>
 </form>
 

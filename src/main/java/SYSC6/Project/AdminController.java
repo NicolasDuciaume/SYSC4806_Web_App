@@ -1,5 +1,7 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -29,12 +31,17 @@ public class AdminController {
         return "admin_portal";
     }
 
-    @GetMapping("/view_users")
-    public String getUsers(Model model){
-//        model.addAttribute("users",checkUser());
-        return "redirect:/view_users";
-    }
-
+//    @GetMapping("/view_users")
+//    public String getUsers(){
+//        if(id==0){
+//            return "login_form";
+//        }
+//        User user = getUser(id);
+//        if(UserUtil.hasAdmin(user)){
+//            return "view_users";
+//        }
+//        return logout();
+//    }
 
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
@@ -69,5 +76,15 @@ public class AdminController {
         }
         return user;
     }
+
+//    /**
+//     * Logs the user out and returns the user to the login screen
+//     * @return
+//     */
+//    @PostMapping("/LogOut")
+//    public String logout(){
+//        id = 0L;
+//        return "redirect:/";
+//    }
 
 }
