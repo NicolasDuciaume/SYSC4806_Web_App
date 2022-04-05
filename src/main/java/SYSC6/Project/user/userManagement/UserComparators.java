@@ -1,7 +1,6 @@
-package SYSC6.Project.employee;
+package SYSC6.Project.user.userManagement;
 
 import SYSC6.Project.sorting.Direction;
-import SYSC6.Project.user.User;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

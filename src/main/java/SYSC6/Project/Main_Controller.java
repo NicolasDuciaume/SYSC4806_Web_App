@@ -5,14 +5,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.management.relation.Role;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class Main_Controller {
@@ -30,15 +25,18 @@ public class Main_Controller {
 
     private boolean testFlag = true;
 
-    @GetMapping("/")
-    public String login(){
+    private void testInit(){
         if(testFlag){
             Long one = createUser("admin", "admin");
             Long two = createUser("user", "user");
-            changeUserRole(two, RoleType.PAID_USER);
             testFlag = false;
         }
-        return "view_users";
+    }
+
+    @GetMapping("/")
+    public String login(){
+        testInit();
+        return "login_form";
     }
 
     /**
@@ -50,7 +48,7 @@ public class Main_Controller {
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
         if(admin.equals("admin")){
-            return "view_users"; //TODO TESTING REDIRECT TO VIEW_USERS
+            return "redirect:/admin_portal";
         }
         return "redirect:/user_portal";
     }
@@ -137,9 +135,8 @@ public class Main_Controller {
     }
 
     @GetMapping("/view_users")
-    public String getUsers(Model model){
-        model.addAttribute("users",checkUser());
-        return "redirect:/view_users";
+    public String getUsers(){
+        return "view_users";
     }
 
 

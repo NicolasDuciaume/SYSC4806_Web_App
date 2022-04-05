@@ -16,10 +16,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -123,6 +120,20 @@ public class UserController {
         targetToUpdate.setRole(userRequest.getRole());
         System.out.println("Targets new Role: "+targetToUpdate.getRole());
         User userUpdated = userRepository.save(targetToUpdate);
+        return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/user/upgrade/{id}")
+    public ResponseEntity<User> upgradeUserRole(@PathVariable("id") long id) {
+        Optional<User> targetToUpdate = userRepository.findById(id);
+        if(!targetToUpdate.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User updated = targetToUpdate.get();
+        if (targetToUpdate.get().getRole().isUpgradeable()){
+            updated = UserUtil.setRoleToUpgradeRole(targetToUpdate.get());
+        }
+        User userUpdated = userRepository.save(updated);
         return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
 }

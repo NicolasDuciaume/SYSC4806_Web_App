@@ -1,8 +1,7 @@
 package SYSC6.Project.user;
 import SYSC6.Project.RoleType;
-import SYSC6.Project.employee.UserPOJO;
+import SYSC6.Project.user.userManagement.UserPOJO;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -38,8 +37,9 @@ public class User implements Serializable{
         this.role = role;
     }
 
-    public UserPOJO getPojo(){
+    public UserPOJO toPojo(){
         UserPOJO userpojo = new UserPOJO();
+        userpojo.setId(this.id);
         userpojo.setUsername(this.username);
         userpojo.setRole(this.role.toString());
         return userpojo;

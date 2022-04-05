@@ -7,8 +7,8 @@ import java.util.Optional;
 public enum RoleType {
     NO_ROLE (1, "no_role"),
     FREE_USER (2, "free_user"),
-    PAID_USER (0, "paid_user"),
-    ADMIN (0, "admin");
+    PAID_USER (1, "paid_user"),
+    ADMIN (3, "admin");
 
     public final int upgradeRoleIndex;
     public final String name;
@@ -18,11 +18,12 @@ public enum RoleType {
         this.name = name;
     }
 
+    public boolean isUpgradeable(){
+        return upgradeRoleIndex != this.ordinal();
+    }
+
     public Optional<RoleType> getUpgradeRole() {
-        if (upgradeRoleIndex != 0){
-            return Optional.of(RoleType.values()[upgradeRoleIndex]);
-        }
-        return Optional.empty();
+        return Optional.of(RoleType.values()[upgradeRoleIndex]);
     }
 
     public static RoleType getRoleByString(String s) {
