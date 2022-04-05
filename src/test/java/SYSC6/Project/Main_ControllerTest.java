@@ -29,17 +29,27 @@ class Main_ControllerTest {
         this.mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("login_form"));
     }
 
-    /*
+
     @Test
     @Order(3)
-    void login_process() throws Exception {
+    void login_process_admin() throws Exception {
         JSONObject obj = new JSONObject();
         obj.put("username", "admin");
         obj.put("password","admin");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated());
-        this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/admin_portal"));
+        this.mockMvc.perform(post("/login_form").param("id", "1").param("admin","admin")).andExpect(redirectedUrl("/admin_portal"));
     }
-     */
+
+    @Test
+    @Order(4)
+    void login_process_user() throws Exception {
+        JSONObject obj = new JSONObject();
+        obj.put("username", "Nick");
+        obj.put("password","Help");
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated());
+        this.mockMvc.perform(post("/login_form").param("id", "2").param("admin","not")).andExpect(redirectedUrl("/user_portal"));
+    }
+
 
     @Test
     void register() throws Exception {
@@ -64,22 +74,8 @@ class Main_ControllerTest {
     }
 
     @Test
-    void logout() {
+    void logout() throws Exception {
+        this.mockMvc.perform(post("/LogOut")).andExpect(redirectedUrl("/"));
     }
 
-    @Test
-    void greeting() {
-    }
-
-    @Test
-    void createUser() {
-    }
-
-    @Test
-    void getUser() {
-    }
-
-    @Test
-    void checkUser() {
-    }
 }
