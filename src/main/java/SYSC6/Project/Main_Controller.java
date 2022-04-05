@@ -22,10 +22,16 @@ import java.util.ArrayList;
 @Controller
 public class Main_Controller {
 
+    /**
+     * Id of the current logged in User
+     * TestFlag is a flag to determine if the initial admin set up was done or not
+     */
     private Long id = 0L;
-
     private boolean testFlag = true;
 
+    /**
+     * Sets a basic user and admin within the system sur-conventing the need for required password format
+     */
     private void testInit(){
         if(testFlag){
             createUser("admin", "admin");
@@ -34,6 +40,10 @@ public class Main_Controller {
         }
     }
 
+    /**
+     * Start the intialization of the admin and user then redirects to the login page
+     * @return the Login html
+     */
     @GetMapping("/")
     public String login(){
         testInit();
@@ -41,9 +51,11 @@ public class Main_Controller {
     }
 
     /**
-     * If login successful it returns the id of the user and give this to the controller
-     * @param UserId
-     * @return user_portal page
+     * Javascript returns the id of the active user and if that user is an admin or not
+     * this allows to redirect the user to the appropriate page
+     * @param UserId id of the current user
+     * @param admin value indicating if that user is an admin or not
+     * @return user_portal page or admin_portal page
      */
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
@@ -63,26 +75,22 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-
+    /**
+     * Displays the html for the registration page
+     * @return
+     */
     @GetMapping("/Registration")
     public String Reg(){
         return "Registration";
     }
 
-    /*
-    @PostMapping("/Create")
-    public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
-        id = createUser(user,pass);
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
-        }
-        return "redirect:/user_portal";
-    }
-    */
-
+    /**
+     * Used to create a new user sent over from the registration page
+     * User is tagged with an id and an admin value to redirect to its appropriate page
+     * @param admin if the user is an admin or not
+     * @param TempId the user id
+     * @return user_portal page or admin_portal page
+     */
     @PostMapping("/TempCreate")
     public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
         id = Integer.parseInt(TempId) * 1L;
@@ -96,7 +104,7 @@ public class Main_Controller {
 
     /**
      * Logs the user out and returns the user to the login screen
-     * @return
+     * @return to the login page
      */
     @PostMapping("/LogOut")
     public String logout(){

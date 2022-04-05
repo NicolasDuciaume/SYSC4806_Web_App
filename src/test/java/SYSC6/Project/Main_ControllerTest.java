@@ -24,22 +24,26 @@ class Main_ControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    /* must stay black as the order of unit test in makes the creation of admin and user account already declared
     @Test
     void login() throws Exception {
         this.mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("login_form"));
     }
+    */
 
-    /*
+
     @Test
     @Order(3)
-    void login_process() throws Exception {
-        JSONObject obj = new JSONObject();
-        obj.put("username", "admin");
-        obj.put("password","admin");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated());
-        this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/admin_portal"));
+    void login_process_admin() throws Exception {
+        this.mockMvc.perform(post("/login_form").param("id", "1").param("admin","admin")).andExpect(redirectedUrl("/admin_portal"));
     }
-     */
+
+    @Test
+    @Order(4)
+    void login_process_user() throws Exception {
+        this.mockMvc.perform(post("/login_form").param("id", "2").param("admin","not")).andExpect(redirectedUrl("/user_portal"));
+    }
+
 
     @Test
     void register() throws Exception {
@@ -64,22 +68,8 @@ class Main_ControllerTest {
     }
 
     @Test
-    void logout() {
+    void logout() throws Exception {
+        this.mockMvc.perform(post("/LogOut")).andExpect(redirectedUrl("/"));
     }
 
-    @Test
-    void greeting() {
-    }
-
-    @Test
-    void createUser() {
-    }
-
-    @Test
-    void getUser() {
-    }
-
-    @Test
-    void checkUser() {
-    }
 }
