@@ -30,7 +30,7 @@ class UserControllerTest {
     @Test
     @Order(2)
     void getUserById() throws Exception {
-        this.mockMvc.perform(get("/rest/api/user/"+1)).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"NO_ROLE\"}"));
+        this.mockMvc.perform(get("/rest/api/user/"+1)).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
     }
 
     @Test
@@ -43,7 +43,7 @@ class UserControllerTest {
         obj.put("username", "Nazifa");
         obj.put("password","Friend");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj)));
-        this.mockMvc.perform(get("/rest/api/user")).andExpect(status().isOk()).andExpect(content().json("[{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"NO_ROLE\"},{\"id\":2,\"username\":\"Nazifa\",\"password\":\"Friend\",\"role\":\"NO_ROLE\"}]"));
+        this.mockMvc.perform(get("/rest/api/user")).andExpect(status().isOk()).andExpect(content().json("[{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"},{\"id\":2,\"username\":\"Nazifa\",\"password\":\"Friend\",\"role\":\"FREE_USER\"}]"));
     }
 
     @Test
@@ -77,7 +77,7 @@ class UserControllerTest {
         obj.put("username", "Test");
         obj.put("password","Check");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj)));
-        this.mockMvc.perform(get("/rest/api/user/get/Test/Check")).andExpect(status().isOk()).andExpect(content().json("{\"id\":3,\"username\":\"Test\",\"password\":\"Check\",\"role\":\"NO_ROLE\"}"));
+        this.mockMvc.perform(get("/rest/api/user/get/Test/Check")).andExpect(status().isOk()).andExpect(content().json("{\"id\":3,\"username\":\"Test\",\"password\":\"Check\",\"role\":\"FREE_USER\"}"));
     }
 
 
@@ -87,6 +87,6 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username", "Nick");
         obj.put("password","Help");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"NO_ROLE\"}"));
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
     }
 }
