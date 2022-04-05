@@ -1,16 +1,9 @@
-package SYSC6.Project.user;
-import SYSC6.Project.RoleType;
-import SYSC6.Project.user.userManagement.UserPOJO;
-import lombok.Getter;
-import lombok.Setter;
-
+package SYSC6.Project;
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Users")
-@Getter
-@Setter
 public class User implements Serializable{
 
     @Id
@@ -39,19 +32,50 @@ public class User implements Serializable{
         this.role = role;
     }
 
-    public UserPOJO toPojo(){
-        UserPOJO userpojo = new UserPOJO();
-        userpojo.setId(this.id);
-        userpojo.setUsername(this.username);
-        userpojo.setRole(this.role.toString());
-        return userpojo;
+    public User(String username, String password, RoleType role, int clicks){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.clicks = clicks;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, Username=%s, Password=%s, Role=%s]",
-                id, username, password, role);
+                "User[id=%d, Username=%s, Password=%s, Role=%s, Clicks=%s]",
+                id, username, password, role, clicks);
     }
 
     public int getClicks() {
