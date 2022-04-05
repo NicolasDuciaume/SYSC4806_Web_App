@@ -113,7 +113,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/user/upgrade/{id}")
+    @PostMapping("/user/changeRole/{id}")
     public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @RequestBody User userRequest) {
         User targetToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("user not found with id: "+id)); //TODO Not an Ideal way to handle this, return appropriate 400 code
