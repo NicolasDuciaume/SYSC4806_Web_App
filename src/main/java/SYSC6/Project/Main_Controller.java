@@ -4,16 +4,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class Main_Controller {
@@ -115,21 +109,15 @@ public class Main_Controller {
         return "user_portal";
     }
 
-    @GetMapping("/admin_portal")
-    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
-        User user = getUser(id);
-        name_place = user.getUsername();
-        model.addAttribute("name", "Admin");
-        user.setRole(RoleType.ADMIN);
-        model.addAttribute("role", user.getRole().toString());
-        return "admin_portal";
-    }
-
-    @GetMapping("/view_users")
-    public String getUsers(Model model){
-        model.addAttribute("users",checkUser());
-        return "redirect:/view_users";
-    }
+//    @GetMapping("/admin_portal")
+//    public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+//        User user = getUser(id);
+//        name_place = user.getUsername();
+//        model.addAttribute("name", "Admin");
+//        user.setRole(RoleType.ADMIN);
+//        model.addAttribute("role", user.getRole().toString());
+//        return "admin_portal";
+//    }
 
 
     public Long createUser(String Username, String Password){
