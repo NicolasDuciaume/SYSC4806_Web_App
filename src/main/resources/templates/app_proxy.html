@@ -10,8 +10,7 @@
 
 <div style="text-align:center">
     <h1 th:text="'Hello, ' + ${name} + '!'"/>
-
-    <h1>You have entered the app! As a free user, you have limited access to the app.</h1>
+    <h1 th:text="'You have entered the app as a ' + ${role} + '! You have __ access'"/>
 
 </div>
 
