@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "Superuser",
+    "role": "ADMIN"
+  },
+  {
+    "id": "1",
+    "name": "Free Nixon",
+    "role": "FREE_USER"
+  },
+  {
+    "id": "2",
+    "name": "Paid Winters",
+    "role": "PAID_USER"
+  },
+  {
+    "id": "3",
+    "name": "None Cox",
+    "role": "NO_ROLE"
+  }
+]

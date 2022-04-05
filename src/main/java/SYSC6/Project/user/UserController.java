@@ -1,12 +1,12 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
+import SYSC6.Project.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -75,9 +75,8 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<List<User>> getAllUsers(){
-        List<User> user = new ArrayList<User>();
 
-        userRepository.findAll().forEach(user::add);
+        List<User> user = new ArrayList<>(userRepository.findAll());
 
         if(user.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -86,13 +85,13 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity<User> createUser(@RequestBody User BuddyRequest) {
-        User userTemp = new User();
-        if(BuddyRequest.getUsername().equals("admin") && BuddyRequest.getPassword().equals("admin123!")){
-            userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword(), RoleType.ADMIN));
+    public ResponseEntity<User> createUser(@RequestBody User userRequest) {
+        User userTemp;
+        if(userRequest.getUsername().equals("admin") && userRequest.getPassword().equals("admin")){
+            userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword(), RoleType.ADMIN));
         }
         else{
-            userTemp = userRepository.save(new User(BuddyRequest.getUsername(), BuddyRequest.getPassword(), RoleType.FREE_USER));
+            userTemp = userRepository.save(new User(userRequest.getUsername(), userRequest.getPassword(), RoleType.FREE_USER));
         }
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
@@ -101,5 +100,31 @@ public class UserController {
     public ResponseEntity<HttpStatus> deleteBuddy(@PathVariable("id") long id) {
         userRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/user/changeRole/{id}")
+    public ResponseEntity<User> changeRole(@PathVariable("id") long id, @RequestBody User userRequest) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User floatingUser = userOptional.get();
+        floatingUser.setRole(userRequest.getRole());
+        floatingUser = userRepository.save(floatingUser);
+        return new ResponseEntity<>(floatingUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/user/upgrade/{id}")
+    public ResponseEntity<User> upgradeUserRole(@PathVariable("id") long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User floatingUser = userOptional.get();
+        if (floatingUser.getRole().isUpgradeable()){
+            UserUtil.setRoleToUpgradeRole(floatingUser);
+        }
+        User userUpdated = userRepository.save(floatingUser);
+        return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
 }
