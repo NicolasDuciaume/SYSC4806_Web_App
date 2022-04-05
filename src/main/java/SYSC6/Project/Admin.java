@@ -1,5 +1,7 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -52,7 +54,7 @@ public class Admin {
         this.password = password;
     }
 
-    public void setUserRole(User user,RoleType role) {
+    public void setUserRole(User user, RoleType role) {
         user.setRole(role);
     }
 

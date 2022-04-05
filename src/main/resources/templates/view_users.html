@@ -1,27 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Bootstrap DataTable</title>
+
+    <link th:rel="stylesheet" th:href="@{datatable/datatables.css}"/>
+    <link th:rel="stylesheet" th:href="@{css/bootstrap.css} "/>
+
 </head>
 <body>
-<!--<table>-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        <th> User </th>-->
-<!--        <th> Name </th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr th:if="${users.empty}">-->
-<!--        <td colspan="2"> No Users Available </td>-->
-<!--    </tr>-->
-<!--    <tr th:each="book : ${users}">-->
-<!--        <td><span th:text="${user.id}"> ID </span></td>-->
-<!--        <td><span th:text="${user.name}"> Name </span></td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Admin Portal - User Management</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" >User Management
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:8080/admin_portal" >Admin-Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:8080/" >Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <h3>User List</h3>
+            <table id="users" class="table table-bordered table-responsive" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width:50%">Username</th>
+                    <th style="width:70%">Role</th>
+                    <th style="width:100%">Interactions</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Interactions</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{Javascript/jquery.js}"></script>
+<script th:src="@{Javascript/popper.js}"></script>
+<script th:src="@{Javascript/bootstrap.js}"></script>
+<script th:src="@{datatable/datatables.js}"></script>
+
+<script>
+
+    var table = $('#users').DataTable({
+        "processing": false,
+        "serverSide": true,
+        "ajax": {
+            "url": "/rest/api/usertable",
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": function (d) {
+                return JSON.stringify(d);
+            }
+        },
+        "columns": [
+            {"data": "username"},
+            {"data": "role"},
+            {"data": null, "defaultContent": "<button>Upgrade Role</button>"}
+        ],
+    });
+
+    $('#users tbody').on( 'click', 'button', function () {
+        let data = table.row( $(this).parents('tr') ).data();
+        toggleRoleFunction(data["id"]);
+        table.ajax.reload();
+    } );
+
+    setInterval(function() {
+        table.ajax.reload();
+    }, 1000);
+
+    function toggleRoleFunction(id){
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8080/rest/api/user/upgrade/"+ id,
+            contentType : "application/json",
+            success: function (d) {
+            },
+            error: function (d) {
+                alert("Error Upgrading User");
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

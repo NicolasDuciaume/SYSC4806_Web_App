@@ -1,18 +1,14 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,16 +18,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class Main_Controller {
 
     private Long id = 0L;
 
+    private boolean testFlag = true;
+
+    private void testInit(){
+        if(testFlag){
+            createUser("admin", "admin");
+            createUser("user", "user");
+            testFlag = false;
+        }
+    }
 
     @GetMapping("/")
     public String login(){
+        testInit();
         return "login_form";
     }
 
@@ -42,7 +47,7 @@ public class Main_Controller {
      */
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
-        id = Integer.parseInt(UserId) * 1L;
+        id = (long) Integer.parseInt(UserId);
         if(admin.equals("admin")){
             return "redirect:/admin_portal";
         }
@@ -101,36 +106,52 @@ public class Main_Controller {
 
     /**
      * Brings the logged in user to the user portal page
-     * @param name_place username
      * @param model
      * @return returns the html for the user portal
      */
     @GetMapping("/user_portal")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+    public String greeting(Model model) {
+        if(id==0){
+            return "login_form";
+        }
         User user = getUser(id);
-        name_place = user.getUsername();
-        model.addAttribute("name", name_place);
-
+        model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
 
+    @PutMapping("/Upgrade")
+    private String upgradeUser(){
+        return "redirect:/user_portal";
+    }
+
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
+        if(id==0){
+            return "login_form";
+        }
         User user = getUser(id);
-        name_place = user.getUsername();
-        model.addAttribute("name", "Admin");
-        user.setRole(RoleType.ADMIN);
-        model.addAttribute("role", user.getRole().toString());
-        return "admin_portal";
+        if(UserUtil.hasAdmin(user)){
+            model.addAttribute("name", "Admin");
+            model.addAttribute("role", user.getRole().toString());
+            return "admin_portal";
+        }
+        return "login_form";
     }
 
     @GetMapping("/view_users")
-    public String getUsers(Model model){
-        model.addAttribute("users",checkUser());
-        return "redirect:/view_users";
+    public String getUsers(){
+        if(id==0){
+            return "login_form";
+        }
+        User user = getUser(id);
+        if(UserUtil.hasAdmin(user)){
+            return "view_users";
+        }
+        return logout();
     }
 
+    //---
 
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
@@ -169,6 +190,11 @@ public class Main_Controller {
         return x;
     }
 
+    /**
+     * Used by other Java endpoints to fetch a User
+     * @param id, id
+     * @return User
+     */
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
@@ -191,8 +217,8 @@ public class Main_Controller {
                 System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString());
-
+                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -203,6 +229,10 @@ public class Main_Controller {
         return user;
     }
 
+    /**
+     * Gets all users?
+     * @return
+     */
     public ArrayList<User> checkUser(){
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
@@ -271,6 +301,52 @@ public class Main_Controller {
         }
         catch (IOException e){
             System.out.println("Error");
+        }
+        return user;
+    }
+
+    /**
+     * Use to change a users role
+     * @param id, id
+     * @param role, in the payload, String version of the RoleType
+     * @return
+     */
+    public User changeUserRole(Long id, RoleType role){
+        JSONParser jsonParser = new JSONParser();
+        User user = new User();
+        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/upgrade/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+            String jsonInputString = "{" + '"' + "role" + '"' + ":" + '"' + role + '"'+"}";
+            //System.out.println(jsonInputString);
+            try(OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println("response: "+response);
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                //System.out.println(temp.get("username").toString());
+                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error changeUserRole");
         }
         return user;
     }
