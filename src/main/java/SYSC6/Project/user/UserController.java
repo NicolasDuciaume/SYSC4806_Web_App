@@ -1,4 +1,4 @@
-package SYSC6.Project.user;
+package SYSC6.Project;
 
 import SYSC6.Project.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
