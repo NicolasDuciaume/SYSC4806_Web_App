@@ -29,14 +29,9 @@ public class Main_Controller {
 
     private Long id = 0L;
 
-    /**
-     * Sends the User to the login page once going to the Heroku Site
-     * @param model
-     * @return login_form (html page)
-     */
+
     @GetMapping("/")
-    public String login(Model model){
-        model.addAttribute("Login",new Login());
+    public String login(){
         return "login_form";
     }
 
@@ -46,15 +41,13 @@ public class Main_Controller {
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@RequestParam(value="id",required=true) String UserId){
+    public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
+        System.out.println(id);
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
         }
-        return "redirect:/user_portal";
+        return "redirect:/user_portal/"+id;
     }
 
     /**
@@ -66,23 +59,13 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-    /**
-     * Processes the information set within the registration form
-     * @param model
-     * @return
-     */
+
     @GetMapping("/Registration")
-    public String Reg(Model model){
-        model.addAttribute("Login",new Login());
+    public String Reg(){
         return "Registration";
     }
 
-    /**
-     * Takes passed variables by the user and creates a user account with that information
-     * @param user username
-     * @param pass password
-     * @return user_portal page
-     */
+    /*
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
@@ -93,6 +76,18 @@ public class Main_Controller {
             }
         }
         return "redirect:/user_portal";
+    }
+    */
+
+    @PostMapping("/TempCreate")
+    public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
+        id = Integer.parseInt(TempId) * 1L;
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
+        }
+        else{
+            return "redirect:/user_portal/"+id;
+        }
     }
 
     /**
@@ -111,15 +106,16 @@ public class Main_Controller {
      * @param model
      * @return returns the html for the user portal
      */
+    /*
     @GetMapping("/user_portal")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
+
         model.addAttribute("role", user.getRole().toString());
-        model.addAttribute("clicks", user.getClicks());
         return "user_portal";
-    }
+    }*/
 
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
@@ -142,10 +138,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-
-//            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             URL url = new URL ("http://localhost:8080/rest/api/user/add");
-
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -183,10 +176,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-
-//            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
-
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -219,10 +209,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-
-//            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
             URL url = new URL ("http://localhost:8080/rest/api/user");
-
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -253,5 +240,40 @@ public class Main_Controller {
             System.out.println("Error");
         }
         return users;
+    }
+
+
+    public User DelUser(Long id){
+        JSONParser jsonParser = new JSONParser();
+        User user = new User();
+        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/Del/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("DELETE");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response);
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                //System.out.println(temp.get("username").toString());
+                user = new User(temp.get("username").toString(), temp.get("password").toString());
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error");
+        }
+        return user;
     }
 }
