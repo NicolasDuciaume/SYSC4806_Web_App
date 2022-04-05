@@ -1,9 +1,8 @@
 package SYSC6.Project;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.json.simple.JSONObject;
@@ -16,9 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -85,8 +82,54 @@ class UserControllerTest {
     @Order(8)
     void createUser() throws Exception {
         JSONObject obj = new JSONObject();
-        obj.put("username", "Nick");
+        obj.put("username","Nick");
         obj.put("password","Help");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
+    }
+
+    @Test
+    @Order(9)
+    void changeRole() throws Exception {
+        JSONObject obj = new JSONObject();
+        obj.put("username","Jim");
+        obj.put("password","pass1!");
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json("{\"id\":5,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"FREE_USER\"}"));
+        JSONObject objt = new JSONObject();
+        objt.put("role","ADMIN");
+        this.mockMvc.perform(post("/rest/api/user/changeRole/"+5).contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":5,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"ADMIN\"}"));
+    }
+
+    @Test
+    @Order(10)
+    void upgradeUserRole() throws Exception {
+        JSONObject obj = new JSONObject();
+        obj.put("username","Cole");
+        obj.put("password","train1!");
+        String jsonString = "{\"id\":6,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"FREE_USER\"}";
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json(jsonString));
+        JSONObject objt = new JSONObject();
+        String jsonStringTexpected = "{\"id\":6,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"PAID_USER\"}";
+        this.mockMvc.perform(put("/rest/api/user/upgrade/"+6)
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(jsonStringTexpected));
+    }
+
+    /*
+    Tests an endpoint in UserRestController <- Made for use with the dynamic table element in view_users.html
+    Endpoint returns Page object with list of UserPOJOS (sans passwords) and a few other stats.
+    just tests that the return is 200 and the json is ok {"data":[],"recordsFiltered":6,"recordsTotal":6,"draw":0}
+    I verify this works by manual integration testing of the site.
+     */
+    @Test
+    @Order(11)
+    void list() throws Exception {
+        JSONObject obj = new JSONObject();
+        String jsonStringTexpected = "{\"data\":[],\"recordsFiltered\":6,\"recordsTotal\":6,\"draw\":0}";
+        this.mockMvc.perform(post("/rest/api/usertable")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(obj)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(jsonStringTexpected));
     }
 }

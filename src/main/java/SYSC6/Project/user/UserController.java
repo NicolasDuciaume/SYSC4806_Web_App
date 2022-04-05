@@ -103,14 +103,13 @@ public class UserController {
     }
 
     @PostMapping("/user/changeRole/{id}")
-    public ResponseEntity<User> upgradeUser(@PathVariable("id") long id, @RequestBody User userRequest) {
+    public ResponseEntity<User> changeRole(@PathVariable("id") long id, @RequestBody User userRequest) {
         Optional<User> userOptional = userRepository.findById(id);
         if(!userOptional.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         User floatingUser = userOptional.get();
         floatingUser.setRole(userRequest.getRole());
-        System.out.println("Targets new Role: "+floatingUser.getRole());
         floatingUser = userRepository.save(floatingUser);
         return new ResponseEntity<>(floatingUser, HttpStatus.CREATED);
     }
