@@ -10,7 +10,7 @@ This web app will serve as a self-serve customer portal for an existing app call
 - Tyler Mair: tylermair@cmail.carleton.ca
 
 ## Current State of the Project
-The project is now complete with all the features implemented and functional as intended.
+The project is now complete with all the features implemented and functional as intended. This project only supports Google Chrome.
 
 ## Plan for the next sprint
 Sprint close to tie up any loose ends in regards to logistics and other ease of use functionalities.
