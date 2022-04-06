@@ -8,48 +8,46 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <body class="img js-fullheight" style="background-image:url(../Images/user_portal.jpg)">
 
-<div style="text-align:center">
-    <div class="container">
-    <h1 th:text="'Hello, ' + ${name} + '!'"/>
-    <h1>Welcome</h1>
-    <h1 th:text="'Your Role is: ' + ${role} + '!'" />
+    <div class="container1">
+        <div style="text-align:center">
+            <h1>Welcome</h1>
+            <h1 th:text="'Hello ' + ${name} + '!'"/>
+            <h1 th:text="'Your Role is: ' + ${role} + '!'" />
+            <h1>This is your user portal, choose an action!</h1>
+        </div>
+    </div>
 
-    <h1>This is your user portal, choose an action!</h1>
+    <div class="container2">
+        <div class="center">
+            <form action="#" method="post" th:action="@{/Click}">
+                <button type="submit">Enter App</button>
+            </form>
+        </div>
+    </div>
+    <div class="container2">
+        <div class="center">
+            <!-- TODO: change to upgrade (Upgrade method to be implemented)-->
+            <form id="upgradeForm" action="#" method="post" th:action="@{/Upgrade}">
+                <button onclick="upgradeUserRole()">Upgrade</button>
+            </form>
+        </div>
+    </div>
+    <div class="container2">
+        <div class="center">
+            <!-- TODO: change to delete_account (Delete method to be implemented)-->
+            <form action="#" method="post" th:action="@{/LogOut}">
+                <button type="submit">Delete Account</button>
+            </form>
+        </div>
+    </div>
+    <div class="container2">
+        <div class="center">
+            <form action="#" method="post" th:action="@{/LogOut}">
+                <button type="submit">Log out</button>
+            </form>
+        </div>
+    </div>
 
-</div>
-</div>
-
-<div class="container">
-    <div class="center">
-        <form action="#" method="post" th:action="@{/Click}">
-            <button type="submit">Enter App</button>
-        </form>
-    </div>
-    </div>
-<div class="container">
-    <div class="center">
-        <!-- TODO: change to upgrade (Upgrade method to be implemented)-->
-        <form id="upgradeForm" action="#" method="post" th:action="@{/Upgrade}">
-            <button onclick="upgradeUserRole()">Upgrade</button>
-        </form>
-    </div>
-    </div>
-<div class="container">
-    <div class="center">
-        <!-- TODO: change to delete_account (Delete method to be implemented)-->
-        <form action="#" method="post" th:action="@{/LogOut}">
-            <button type="submit">Delete Account</button>
-        </form>
-    </div>
-    </div>
-<div class="container">
-    <div class="center">
-        <form action="#" method="post" th:action="@{/LogOut}">
-            <button type="submit">Log out</button>
-        </form>
-    </div>
-</div>
-</div>
 
 </body>
 <script>
