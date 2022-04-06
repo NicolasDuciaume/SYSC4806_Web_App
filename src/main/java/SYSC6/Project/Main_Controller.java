@@ -64,7 +64,7 @@ public class Main_Controller {
         if(admin.equals("admin")){
             return "redirect:/admin_portal";
         }
-        return "redirect:/user_portal";
+        return "redirect:/user/"+id;
     }
 
     /**
@@ -121,7 +121,7 @@ public class Main_Controller {
             return "redirect:/admin_portal";
         }
         else{
-            return "redirect:/user_portal";
+            return "redirect:/user/"+id;
         }
     }
 
@@ -135,26 +135,9 @@ public class Main_Controller {
         return "redirect:/";
     }
 
-    /**
-     * Brings the logged in user to the user portal page
-     * @param model
-     * @return returns the html for the user portal
-     */
-    @GetMapping("/user_portal")
-    public String greeting(Model model) {
-        if(id==0){
-            return "login_form";
-        }
-        User user = getUser(id);
-        model.addAttribute("name", user.getUsername());
-        model.addAttribute("role", user.getRole().toString());
-
-        return "user_portal";
-    }
-
     @PutMapping("/Upgrade")
     private String upgradeUser(){
-        return "redirect:/user_portal";
+        return "redirect:/user/"+id;
     }
 
     @GetMapping("/admin_portal")
