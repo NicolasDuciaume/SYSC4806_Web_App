@@ -10,15 +10,15 @@ This web app will serve as a self-serve customer portal for an existing app call
 - Tyler Mair: tylermair@cmail.carleton.ca
 
 ## Current State of the Project
-The project has moved to the alpha release stage. The features are all mostly initialized but all the features are not completely functional.
+The project is now complete with all the features implemented and functional as intended. This project only supports Google Chrome.
 
 ## Plan for the next sprint
-The plan for the next sprint is:
-- All the features are to be completed by the end of next sprint
-- Improve security of the login and registration
+Sprint close to tie up any loose ends in regards to logistics and other ease of use functionalities.
 
-## Schema of the Database
-![DB diagram drawio](https://user-images.githubusercontent.com/44377220/157507994-b8d532f4-2ad5-4eee-9c75-f4d624f15233.png)
+## Schema of the Database and Entity Relationship Diagram
+![DB diagram (1)](https://user-images.githubusercontent.com/44377220/162010750-cf1b3ed6-a5ce-4bfc-b6e4-e13c91deffb2.jpg)
+![entity relationship diagram](https://user-images.githubusercontent.com/44377220/162010768-a2ff8836-a911-4577-abdd-50f4de88dd0c.png)
 
 ## UML Class Diagrams
-![Class Diagram_deliverable 2 drawio](https://user-images.githubusercontent.com/44377220/159767279-a6953f53-f73e-43b5-af17-b284b9e344de.png)
+![Class Diagram (1)](https://user-images.githubusercontent.com/44377220/162010955-d0d4ee30-17e1-4a2b-b220-4874bca509e6.jpg)
+
