@@ -1,5 +1,7 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.Admin;
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ public class AdminTest {
         username="admin";
         password="admin";
         id=1234567810L;
-        admin = new Admin(username,password,RoleType.ADMIN);
+        admin = new Admin(username,password, RoleType.ADMIN);
         user = new User();
     }
 

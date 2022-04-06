@@ -1,5 +1,6 @@
-package SYSC6.Project;
+package SYSC6.Project.user.controllers;
 
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
 import SYSC6.Project.user.UserRepository;
 import org.json.simple.JSONObject;

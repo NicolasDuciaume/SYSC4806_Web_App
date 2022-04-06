@@ -92,7 +92,6 @@ class UserControllerTest {
     }
 
     /*
-    Tests an endpoint in UserRestController <- Made for use with the dynamic table element in view_users.html
     Endpoint returns Page object with list of UserPOJOS (sans passwords) and a few other stats.
     just tests that the return is 200 and the json is ok {"data":[],"recordsFiltered":6,"recordsTotal":6,"draw":0}
     I verify this works by manual integration testing of the site.
@@ -102,7 +101,7 @@ class UserControllerTest {
     void list() throws Exception {
         JSONObject obj = new JSONObject();
         String jsonStringTexpected = "{\"data\":[],\"recordsFiltered\":5,\"recordsTotal\":5,\"draw\":0}";
-        this.mockMvc.perform(post("/rest/api/usertable")
+        this.mockMvc.perform(post("/rest/api/user/pagelist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(obj)))
                 .andExpect(status().is2xxSuccessful())

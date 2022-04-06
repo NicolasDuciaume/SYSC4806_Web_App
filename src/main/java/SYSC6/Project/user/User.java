@@ -1,5 +1,4 @@
 package SYSC6.Project.user;
-import SYSC6.Project.RoleType;
 import SYSC6.Project.user.userManagement.UserPOJO;
 import lombok.Getter;
 import lombok.Setter;

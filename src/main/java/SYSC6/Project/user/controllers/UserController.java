@@ -1,6 +1,13 @@
-package SYSC6.Project.user;
+package SYSC6.Project.user.controllers;
 
-import SYSC6.Project.RoleType;
+import SYSC6.Project.user.RoleType;
+import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserRepository;
+import SYSC6.Project.user.UserUtil;
+import SYSC6.Project.user.userManagement.sorting.Page;
+import SYSC6.Project.user.userManagement.sorting.PagingRequest;
+import SYSC6.Project.user.userManagement.UserPOJO;
+import SYSC6.Project.user.userManagement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +23,15 @@ public class UserController {
     private static byte[] key;
     private static SecretKeySpec secretKey;
 
+    private final UserRepository userRepository;
+
+    private final UserService userService;
+
     @Autowired
-    UserRepository userRepository;
+    public UserController(UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
     /**
      * Takes a user id and fetches the user associated with that id
@@ -111,6 +125,14 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Change a users role:
+     * "role":"[RoleType.toString]"
+     *
+     * @param id, id
+     * @param userRequest, userRequest
+     * @return ResponseEntity
+     */
     @PostMapping("/user/changeRole/{id}")
     public ResponseEntity<User> changeRole(@PathVariable("id") long id, @RequestBody User userRequest) {
         Optional<User> userOptional = userRepository.findById(id);
@@ -123,6 +145,11 @@ public class UserController {
         return new ResponseEntity<>(floatingUser, HttpStatus.CREATED);
     }
 
+    /**
+     * Trigger a users upgrade routine
+     * @param id, id
+     * @return ResponseEntity
+     */
     @PutMapping("/user/upgrade/{id}")
     public ResponseEntity<User> upgradeUserRole(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
@@ -136,4 +163,15 @@ public class UserController {
         User userUpdated = userRepository.save(floatingUser);
         return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
+
+    /**
+     * Returns a Page object with all users POJO objects contained within, used by dynamic table elements in admin portal
+     * @param pagingRequest, pagingRequest
+     * @return Page<UserPOJO>
+     */
+    @PostMapping("/user/pagelist")
+    public Page<UserPOJO> list(@RequestBody PagingRequest pagingRequest) {
+        return userService.getUsers(pagingRequest);
+    }
+
 }

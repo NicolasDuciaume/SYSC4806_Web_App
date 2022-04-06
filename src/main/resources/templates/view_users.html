@@ -78,7 +78,7 @@
         "processing": false,
         "serverSide": true,
         "ajax": {
-            "url": "/rest/api/usertable",
+            "url": "/rest/api/user/pagelist",
             "type": "POST",
             "dataType": "json",
             "contentType": "application/json",
@@ -89,7 +89,7 @@
         "columns": [
             {"data": "username"},
             {"data": "role"},
-            {"data": null, "defaultContent": "<button>Upgrade Role</button>"}
+            {"data": null, "defaultContent": "<button type=\"button\" class=\"btn btn-primary btn-sm active\" >Toggle Role</button>"}
         ],
     });
 

@@ -1,4 +1,4 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
 import java.util.Optional;
 
