@@ -55,6 +55,42 @@ class Main_ControllerTest {
         this.mockMvc.perform(get("/Registration")).andExpect(status().isOk()).andExpect(view().name("Registration"));
     }
 
+    /**
+     * Confirm Delete for get mapping
+     * @throws Exception
+     */
+    @Test
+    void confirmDelete() throws Exception {
+        this.mockMvc.perform(get("/confirm_delete")).andExpect(redirectedUrl("/confirm_delete"));
+    }
+
+    /**
+     * Confirm Delete for post mapping
+     * @throws Exception
+     */
+    @Test
+    void delete() throws Exception {
+        this.mockMvc.perform(post("/confirm_delete")).andExpect(status().isOk()).andExpect(view().name("confirm_delete"));
+    }
+
+    /**
+     * test confirmation yes delete post
+     * @throws Exception
+     */
+    @Test
+    void yesDelete() throws Exception {
+        this.mockMvc.perform(post("/yes_delete")).andExpect(redirectedUrl("/"));
+    }
+
+    /**
+     * test confirmation no delete post
+     * @throws Exception
+     */
+    @Test
+    void noDelete() throws Exception {
+        this.mockMvc.perform(post("/noDelete")).andExpect(redirectedUrl("/user_portal"));
+    }
+
     @Test
     @Order(1)
     void create1() throws Exception {
