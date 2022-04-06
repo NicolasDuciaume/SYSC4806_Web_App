@@ -1,21 +1,17 @@
 package SYSC6.Project;
 
-import org.json.simple.JSONObject;
-import org.junit.jupiter.api.*;
-
-
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import org.springframework.ui.Model;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
@@ -41,7 +37,7 @@ class Main_ControllerTest {
     @Test
     @Order(4)
     void login_process_user() throws Exception {
-        this.mockMvc.perform(post("/login_form").param("id", "2").param("admin","not")).andExpect(redirectedUrl("/user_portal"));
+        this.mockMvc.perform(post("/login_form").param("id", "2").param("admin","not")).andExpect(redirectedUrl("/user/2"));
     }
 
 
@@ -58,7 +54,7 @@ class Main_ControllerTest {
     @Test
     @Order(1)
     void create1() throws Exception {
-        this.mockMvc.perform(post("/TempCreate").param("admin", "not").param("id", "1")).andExpect(redirectedUrl("/user_portal"));
+        this.mockMvc.perform(post("/TempCreate").param("admin", "not").param("id", "1")).andExpect(redirectedUrl("/user/1"));
     }
 
     @Test
