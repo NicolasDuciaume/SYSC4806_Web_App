@@ -12,8 +12,16 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     List<User> findByRole(RoleType aRole);
     User findByUsername(String Username);
+<<<<<<< master:src/main/java/SYSC6/Project/user/UserRepository.java
     List<User> findByPassword(String Password);
 
     @Transactional
     void deleteById(Long Id);
 }
+=======
+    ArrayList<User> findByPassword(String Password);
+
+    @Transactional
+    void deleteById(Long Id);
+}
+>>>>>>> Completed user delete method functionality:src/main/java/SYSC6/Project/UserRepository.java
