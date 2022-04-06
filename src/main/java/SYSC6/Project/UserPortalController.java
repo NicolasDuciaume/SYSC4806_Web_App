@@ -1,28 +1,39 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserRepository;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 
-@CrossOrigin(origins = "http://localhost:8080")
-//@CrossOrigin(origins = "https://projectsysc4806.herokuapp.com")
 @Controller
-//@RequestMapping("/rest/api/user_portal")
 public class UserPortalController {
     private static int LIMIT = 1000;
     private boolean limitExists = false;
     private Long id = 0L;
 
-    /**
-     * @param UserId
-     * @param role
-     * @param model
-     * @return
-     */
+    @Autowired
+    UserRepository userRepository;
+
+    @GetMapping("/user/{id}")
+    public String getId(@PathVariable("id") String userID){
+        id = Integer.parseInt(userID) * 1L;
+        return "redirect:/user_portal";
+    }
+
+    /*
     @PostMapping("/user_portal")
     public String enterPortal(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="role",required=true) String role, Model model){
         id = Integer.parseInt(UserId) * 1L;
@@ -32,6 +43,19 @@ public class UserPortalController {
         System.out.println("Entered user portal");
 
         return "redirect:/user_portal";
+    }*/
+
+    @GetMapping("/user_portal")
+    public String greeting(Model model) {
+        if(id==0){
+            return "login_form";
+        }
+        User user = getUser(id);
+        checkRole(user.getRole().toString());
+        model.addAttribute("name", user.getUsername());
+        model.addAttribute("role", user.getRole().toString());
+
+        return "user_portal";
     }
 
     @PostMapping("/GoBack")
@@ -64,11 +88,10 @@ public class UserPortalController {
      */
     @PostMapping("/Click")
     public String incrementClicks(Model model){
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("user not found"));
-//        int numClicks = user.getClicks();
+        User user = getUser(id);
+        int numClicks = user.getClicks();
 
-        int numClicks = 0;
+
         // Check if a limit has been reached only if it is applied (free user only)
         if (limitExists) {
             if (numClicks == LIMIT) {
@@ -81,8 +104,8 @@ public class UserPortalController {
         }
         numClicks++;
 
-//        user.setClicks(numClicks);
-//        userRepository.save(user); // update clicks in database
+        user.setClicks(numClicks);
+        userRepository.save(user); // update clicks in database
 
         model.addAttribute("limitExists", limitExists);
         System.out.println("Your ID: " + id);
@@ -100,8 +123,9 @@ public class UserPortalController {
      */
     @GetMapping("/app_proxy")
     public String enterApp(Model model){
-        // send to upgrade page, for now sends back to main page
-//        String userName = model.getAttribute("name").toString();
+        User user = getUser(id);
+        model.addAttribute("name", user.getUsername());
+        model.addAttribute("role", user.getRole().toString());
         return "app_proxy";
     }
 
@@ -125,4 +149,38 @@ public class UserPortalController {
 //        // send to upgrade page, for now sends back to main page
 //        return "redirect:/user_portal"; // TODO change this to upgrade page once that has been added, for now redirect to main page
 //    }
+
+    public User getUser(Long id){
+        JSONParser jsonParser = new JSONParser();
+        User user = new User();
+        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response);
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                //System.out.println(temp.get("username").toString());
+                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error");
+        }
+        return user;
+    }
 }
