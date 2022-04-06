@@ -10,7 +10,7 @@ function myFunction() {
     if((pass.length > 6) && (format.test(pass)) && (format2.test(pass))){
         $.ajax({
             type: "GET",
-            url: "http://projectsysc4806.herokuapp.com/rest/api/user/get/" + document.getElementById("username").value,
+            url: "demo4806.herokuapp.com/rest/api/user/get/" + document.getElementById("username").value,
             contentType : "application/json",
             success: function (data) {
                 document.getElementById("userHidden").value = document.getElementById("username").value
@@ -30,7 +30,7 @@ function myFunction() {
 function createFunction(){
     $.ajax({
         type: "POST",
-        url: "http://projectsysc4806.herokuapp.com/rest/api/user/add",
+        url: "demo4806.herokuapp.com/rest/api/user/add",
         contentType : "application/json",
         data:JSON.stringify({"username": document.getElementById("userHidden").value,"password" : document.getElementById("passHidden").value}),
         success: function (data) {
