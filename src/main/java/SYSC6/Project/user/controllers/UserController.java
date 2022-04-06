@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.*;
 
-@CrossOrigin(origins = "demo4806.herokuapp.com")
+@CrossOrigin(origins = "https://demo4806.herokuapp.com")
 @RestController
 @RequestMapping("/rest/api")
 public class UserController {

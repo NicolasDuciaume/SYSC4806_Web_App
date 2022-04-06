@@ -177,7 +177,7 @@ public class UserPortalController {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");

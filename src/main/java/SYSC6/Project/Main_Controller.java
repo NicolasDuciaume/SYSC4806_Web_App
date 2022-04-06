@@ -172,7 +172,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user/add");
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -210,7 +210,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -279,7 +279,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         User user = new User();
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -311,7 +311,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Admin user = new Admin();
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -347,7 +347,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -385,7 +385,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("demo4806.herokuapp.com/rest/api/user/Del/"+id.toString());
+            URL url = new URL ("https://demo4806.herokuapp.com/rest/api/user/Del/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("DELETE");
             con.setRequestProperty("Content-Type", "application/json; utf-8");

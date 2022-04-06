@@ -49,7 +49,7 @@
     function upgradeUserRole() {
         $.ajax({
             type: "PUT",
-            url: "demo4806.herokuapp.com/rest/api/user/upgrade/" + document.getElementById("userId").value,
+            url: "https://demo4806.herokuapp.com/rest/api/user/upgrade/" + document.getElementById("userId").value,
             contentType : "application/json",
             dataType : 'json',
             success: function (data) {
