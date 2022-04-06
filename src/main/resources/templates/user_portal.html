@@ -18,6 +18,8 @@
         </div>
     </div>
 
+    <input type="hidden" id="userId" th:value="${userId}" th:placeholder="0">
+
         <div class="container2">
             <div class="center" style="text-align: center">
                 <form action="#" method="post" th:action="@{/Click}">
@@ -25,8 +27,8 @@
                 </form>
             </div>
             <div class="center" style="text-align: center">
-                <form id="upgradeForm" action="#" method="post" th:action="@{/Upgrade}">
-                    <button onclick="upgradeUserRole()">Upgrade</button>
+                <form id="upgradeForm" action="#" method="get" th:action="@{/Upgrade}">
+                    <button th:text="${up}" onclick="upgradeUserRole()"></button>
                 </form>
             </div>
             <div class="center" style="text-align: center">
@@ -47,7 +49,7 @@
     function upgradeUserRole() {
         $.ajax({
             type: "PUT",
-            url: "http://localhost:8080/rest/api/user/upgrade/" + document.getElementById("userId").value + "/" + "free_user",
+            url: "http://localhost:8080/rest/api/user/upgrade/" + document.getElementById("userId").value,
             contentType : "application/json",
             dataType : 'json',
             success: function (data) {

@@ -8,9 +8,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,6 +63,14 @@ public class UserPortalController {
         checkRole(user.getRole().toString());
         model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
+        model.addAttribute("userId", id);
+
+        if(user.getRole() == RoleType.FREE_USER){
+            model.addAttribute("up", "Upgrade");
+        }
+        else{
+            model.addAttribute("up","Downgrade");
+        }
 
         return "user_portal";
     }
@@ -79,6 +85,11 @@ public class UserPortalController {
 
         System.out.println("Back from app_proxy");
 
+        return "redirect:/user_portal";
+    }
+
+    @GetMapping("/Upgrade")
+    private String upgradeUser2(){
         return "redirect:/user_portal";
     }
 

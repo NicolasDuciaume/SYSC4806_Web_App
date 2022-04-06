@@ -135,10 +135,6 @@ public class Main_Controller {
         return "redirect:/";
     }
 
-    @PutMapping("/Upgrade")
-    private String upgradeUser(){
-        return "redirect:/user/"+id;
-    }
 
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
