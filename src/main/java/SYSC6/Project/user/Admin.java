@@ -1,6 +1,7 @@
-package SYSC6.Project;
+package SYSC6.Project.user;
 
 
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
 
 public class Admin extends User {
@@ -9,7 +10,7 @@ public class Admin extends User {
         super();
     }
 
-    public Admin(String username, String password,RoleType role){
+    public Admin(String username, String password, RoleType role){
         super(username,password,role);
     }
 

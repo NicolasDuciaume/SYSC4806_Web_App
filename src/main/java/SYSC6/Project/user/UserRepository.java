@@ -1,10 +1,8 @@
 package SYSC6.Project.user;
 
-import SYSC6.Project.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long>{
