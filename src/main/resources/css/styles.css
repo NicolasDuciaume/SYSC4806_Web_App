@@ -44,6 +44,7 @@ header {
 .container1 {
     height: 100px;
     position: relative;
+    margin-top: 50px;
     top: 50%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
@@ -51,13 +52,14 @@ header {
 }
 
 .container2 {
-    height: 120px;
+    height: 150px;
     position: relative;
 }
 
 .center {
-    margin: 20;
-    position: absolute;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
     top: 50%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
