@@ -127,7 +127,7 @@ public class UserPortalController {
 
         // Check if a limit has been reached only if it is applied (free user only)
         if (limitExists) {
-            if (numClicks == LIMIT) {
+            if (numClicks >= LIMIT) {
                 // free user has reached their 1000 click limit - disable "enter app" button
                 System.out.println("Limit reached");
 
@@ -177,7 +177,7 @@ public class UserPortalController {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("http://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");

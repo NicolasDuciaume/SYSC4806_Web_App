@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**", "/Javascript/**", "/Images/**", "datatable/**", "jquery/**")
-                .addResourceLocations("classpath:/css/", "classpath:/Javascript/", "classpath:/Images/", "classpath:/Datatable/", "classpath:/jquery/");
+                .addResourceLocations("classpath:/css/", "classpath:/Javascript/", "classpath:/Images/", "classpath:/datatable/", "classpath:/jquery/");
     }
 
 }
