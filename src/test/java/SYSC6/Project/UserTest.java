@@ -1,5 +1,6 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

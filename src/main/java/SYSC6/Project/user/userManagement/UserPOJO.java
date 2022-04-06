@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Lightweight user object for use in front end elements
+ * Lightweight user object for use in front end elements, no password field
  */
 @Getter
 @Setter

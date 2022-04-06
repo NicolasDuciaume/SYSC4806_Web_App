@@ -1,4 +1,4 @@
-package SYSC6.Project.sorting;
+package SYSC6.Project.user.userManagement.sorting;
 
 import lombok.*;
 

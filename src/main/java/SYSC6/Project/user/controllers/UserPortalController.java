@@ -1,5 +1,6 @@
-package SYSC6.Project;
+package SYSC6.Project.user.controllers;
 
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
 import SYSC6.Project.user.UserRepository;
 import org.json.simple.JSONObject;
@@ -176,7 +177,7 @@ public class UserPortalController {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");

@@ -1,7 +1,8 @@
 package SYSC6.Project.user;
 
-import SYSC6.Project.RoleType;
-
+/**
+ * Various utility methods for interacting with User entity objects
+ */
 public class UserUtil {
 
     public static void setRoleToUpgradeRole(User user){

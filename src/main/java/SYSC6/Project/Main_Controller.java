@@ -1,7 +1,8 @@
 package SYSC6.Project;
 
+import SYSC6.Project.user.Admin;
+import SYSC6.Project.user.RoleType;
 import SYSC6.Project.user.User;
-import SYSC6.Project.user.UserRepository;
 import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -171,7 +172,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/add");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -199,7 +200,8 @@ public class Main_Controller {
             }
         }
         catch (IOException e){
-            System.out.println("Error");
+            System.out.println("createUser() Error");
+            e.printStackTrace();
         }
         return x;
     }
@@ -208,7 +210,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -224,7 +226,7 @@ public class Main_Controller {
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
-                    User userTemp = new User(user.get("username").toString(), user.get("password").toString(),RoleType.getRoleByString(user.get("role").toString()));
+                    User userTemp = new User(user.get("username").toString(), user.get("password").toString(), RoleType.getRoleByString(user.get("role").toString()));
                     userTemp.setId((Long) user.get("id"));
                     users.add(userTemp);
                 }
@@ -234,6 +236,7 @@ public class Main_Controller {
         }
         catch (IOException e){
             System.out.println("getAllUsers() Error");
+            e.printStackTrace();
         }
         return users;
     }
@@ -275,9 +278,8 @@ public class Main_Controller {
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
-//        System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -291,9 +293,7 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-//                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
                 user.setId(Long.valueOf(temp.get("id").toString()));
             } catch (ParseException e) {
@@ -302,6 +302,7 @@ public class Main_Controller {
         }
         catch (IOException e){
             System.out.println("getUser() Error");
+            e.printStackTrace();
         }
         return user;
     }
@@ -309,9 +310,8 @@ public class Main_Controller {
     public Admin getAdmin(Long id){
         JSONParser jsonParser = new JSONParser();
         Admin user = new Admin();
-//        System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -333,7 +333,8 @@ public class Main_Controller {
             }
         }
         catch (IOException e){
-            System.out.println("getUser() Error");
+            System.out.println("getAdmin() Error");
+            e.printStackTrace();
         }
         return user;
     }
@@ -346,7 +347,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user");
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -360,7 +361,6 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-//                System.out.println(response);
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
@@ -374,7 +374,8 @@ public class Main_Controller {
             }
         }
         catch (IOException e){
-            System.out.println("Error");
+            System.out.println("checkUser() Error ");
+            e.printStackTrace();
         }
         return users;
     }
@@ -384,7 +385,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/Del/"+id.toString());
+            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/Del/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("DELETE");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -398,9 +399,7 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString());
 
             } catch (ParseException e) {
@@ -408,54 +407,10 @@ public class Main_Controller {
             }
         }
         catch (IOException e){
-            System.out.println("Error");
+            System.out.println("deleteUser() Error");
+            e.printStackTrace();
         }
         return user;
     }
 
-    /**
-     * Use to change a users role
-     * @param id, id
-     * @param role, in the payload, String version of the RoleType
-     * @return
-     */
-    public User changeUserRole(Long id, RoleType role){
-        JSONParser jsonParser = new JSONParser();
-        User user = new User();
-        System.out.println(id);
-        try {
-            URL url = new URL ("http://localhost:8080/rest/api/user/upgrade/"+id.toString());
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
-            String jsonInputString = "{" + '"' + "role" + '"' + ":" + '"' + role + '"'+"}";
-            //System.out.println(jsonInputString);
-            try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println("response: "+response);
-                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
-                //System.out.println(temp.get("username").toString());
-                user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
-                user.setId(Long.valueOf(temp.get("id").toString()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (IOException e){
-            System.out.println("Error changeUserRole");
-        }
-        return user;
-    }
 }

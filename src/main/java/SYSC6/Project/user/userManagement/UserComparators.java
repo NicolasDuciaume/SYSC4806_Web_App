@@ -1,6 +1,6 @@
 package SYSC6.Project.user.userManagement;
 
-import SYSC6.Project.sorting.Direction;
+import SYSC6.Project.user.userManagement.sorting.Direction;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,6 +9,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * For searching and filtering UserPOJO's, acts as the underlying code for comparing
+ */
 public final class UserComparators {
 
     @EqualsAndHashCode
