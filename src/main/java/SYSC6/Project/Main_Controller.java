@@ -139,7 +139,7 @@ public class Main_Controller {
         if(id==0){
             return "login_form";
         }
-        User user = getUser(id);
+        Admin user = getAdmin(id);
         if(UserUtil.hasAdmin(user)){
             model.addAttribute("name", "Admin");
             model.addAttribute("role", user.getRole().toString());
@@ -219,7 +219,6 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-//                System.out.println(response);
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
@@ -294,6 +293,38 @@ public class Main_Controller {
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("getUser() Error");
+        }
+        return user;
+    }
+
+    public Admin getAdmin(Long id){
+        JSONParser jsonParser = new JSONParser();
+        Admin user = new Admin();
+//        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                user = new Admin(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
                 user.setId(Long.valueOf(temp.get("id").toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
