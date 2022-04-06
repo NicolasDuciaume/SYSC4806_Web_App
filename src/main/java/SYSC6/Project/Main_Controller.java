@@ -266,7 +266,6 @@ public class Main_Controller {
         return Integer.toString(counter);
     }
 
-
     /**
      * Used by other Java endpoints to fetch a User
      * @param id, id
