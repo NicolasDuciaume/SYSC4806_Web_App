@@ -172,30 +172,26 @@ public class Main_Controller {
         return "user_portal";
     }
 
-<<<<<<< master
-    @PutMapping("/Upgrade")
-    private String upgradeUser(){
+    @PostMapping("/noDelete")
+    public String back() {
         return "redirect:/user_portal";
     }
 
-=======
-    @PostMapping("/delete_user")
+    @PostMapping("/yes_delete")
     public String deleteUsers() {
         deleteUser(this.id);
 
         return "redirect:/";
     }
 
-    @PostMapping("/noDelete")
-    public String back() {
-        return "redirect:/user_portal";
+    @GetMapping("/confirm_delete")
+    public String delete_page() {
+        return "redirect:/confirm_delete";
     }
 
-    @GetMapping("/delete_user")
-    public String delete_page() {
-//        return "confirm_delete";
-
-        return "";
+    @PostMapping("/confirm_delete")
+    public String delete() {
+        return "confirm_delete";
     }
 
     // GetMapping for HTML page
