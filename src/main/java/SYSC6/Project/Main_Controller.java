@@ -26,17 +26,10 @@ import java.util.List;
 
 @Controller
 public class Main_Controller {
-
     private Long id = 0L;
 
-    /**
-     * Sends the User to the login page once going to the Heroku Site
-     * @param model
-     * @return login_form (html page)
-     */
     @GetMapping("/")
-    public String login(Model model){
-        model.addAttribute("Login",new Login());
+    public String login(){
         return "login_form";
     }
 
@@ -46,13 +39,10 @@ public class Main_Controller {
      * @return user_portal page
      */
     @PostMapping("/login_form")
-    public String login_process(@RequestParam(value="id",required=true) String UserId){
+    public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
         id = Integer.parseInt(UserId) * 1L;
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
         }
         return "redirect:/user_portal";
     }
@@ -66,23 +56,12 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-    /**
-     * Processes the information set within the registration form
-     * @param model
-     * @return
-     */
     @GetMapping("/Registration")
-    public String Reg(Model model){
-        model.addAttribute("Login",new Login());
+    public String Reg(){
         return "Registration";
     }
 
-    /**
-     * Takes passed variables by the user and creates a user account with that information
-     * @param user username
-     * @param pass password
-     * @return user_portal page
-     */
+    /*
     @PostMapping("/Create")
     public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
         id = createUser(user,pass);
@@ -93,6 +72,18 @@ public class Main_Controller {
             }
         }
         return "redirect:/user_portal";
+    }
+    */
+
+    @PostMapping("/TempCreate")
+    public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
+        id = Integer.parseInt(TempId) * 1L;
+        if(admin.equals("admin")){
+            return "redirect:/admin_portal";
+        }
+        else{
+            return "redirect:/user_portal";
+        }
     }
 
     /**
@@ -116,10 +107,32 @@ public class Main_Controller {
         User user = getUser(id);
         name_place = user.getUsername();
         model.addAttribute("name", name_place);
-
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
+
+    @PostMapping("/delete_user")
+    public String deleteUsers() {
+        deleteUser(this.id);
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/noDelete")
+    public String back() {
+        return "redirect:/user_portal";
+    }
+
+    @GetMapping("/delete_user")
+    public String delete_page() {
+//        return "confirm_delete";
+
+        return "";
+    }
+
+    // GetMapping for HTML page
+    // Yes: calls the delete_user command
+    // No returns to the user portal page
 
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
@@ -137,12 +150,11 @@ public class Main_Controller {
         return "redirect:/view_users";
     }
 
-
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/add");
+            URL url = new URL ("http://localhost:8080/rest/api/user/add");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -180,7 +192,7 @@ public class Main_Controller {
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/"+id.toString());
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -213,7 +225,7 @@ public class Main_Controller {
         JSONParser jsonParser = new JSONParser();
         ArrayList<User> users = new ArrayList<>();
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user");
+            URL url = new URL ("http://localhost:8080/rest/api/user");
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -246,13 +258,13 @@ public class Main_Controller {
         return users;
     }
 
-    public User DelUser(Long id){
+    public User deleteUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
         System.out.println(id);
         try {
-            URL url = new URL ("https://projectsysc4806.herokuapp.com/rest/api/user/Del/22+id.toString()); " +
-                    "HttpURLConnection con = (HttpURLConnection)url.openConnection()");
+            URL url = new URL ("http://localhost:8080/rest/api/user/Del/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("DELETE");
             con.setRequestProperty("Content-Type", "application/json; utf-8");
             con.setRequestProperty("Accept", "application/json");
@@ -278,5 +290,16 @@ public class Main_Controller {
             System.out.println("Error");
         }
         return user;
+
+        // Button to Delete user
+        // redirects to the DeletePortal page
+        // add controller and HTML
+        // Delete account portal
+        // Redirects to a method in my controller
+        // In the method, it will delete the user
+        // DeletePortal.html
+        // Test endpoint: going to that page, Delete portal
+        // GET and POST request that works
+        // Delete button, and then popup. Yes Delete, NO go back to user portal
     }
 }
