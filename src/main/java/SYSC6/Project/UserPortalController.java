@@ -8,7 +8,9 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 
 @Controller
@@ -23,6 +26,7 @@ public class UserPortalController {
     private static int LIMIT = 1000;
     private boolean limitExists = false;
     private Long id = 0L;
+    private HashMap<Long, String> users = new HashMap<>(); // TODO: store users internally on portal and acces their info according to id
 
     @Autowired
     UserRepository userRepository;
@@ -51,6 +55,11 @@ public class UserPortalController {
             return "login_form";
         }
         User user = getUser(id);
+
+        // Store user info within the portal if it's not already saved
+        if (!users.containsKey(id)){
+            users.put(id, user.toString());
+        }
         checkRole(user.getRole().toString());
         model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
@@ -89,8 +98,10 @@ public class UserPortalController {
     @PostMapping("/Click")
     public String incrementClicks(Model model){
         User user = getUser(id);
-        int numClicks = user.getClicks();
-
+        System.out.printf("User Info with ID=%d [BEFORE]: \n%s\n", id, users.get(id));
+//        System.out.printf("User Info with ID=%d: \n%s\n", id, user.toString());
+//        int numClicks = user.getClicks();
+        int numClicks = Integer.parseInt(users.get(id).split("=")[5].replace("]", ""));
 
         // Check if a limit has been reached only if it is applied (free user only)
         if (limitExists) {
@@ -102,14 +113,20 @@ public class UserPortalController {
                 return "redirect:/user_portal";
             }
         }
+
+        int oldCount = numClicks;
         numClicks++;
 
-        user.setClicks(numClicks);
+        String updatedUserData = users.get(id).replace(String.format("Clicks=%d",oldCount), String.format("Clicks=%d",numClicks));
+        users.replace(id, updatedUserData); // Update locally stored user data
+
+        user.setClicks(numClicks); // Update user
         userRepository.save(user); // update clicks in database
 
         model.addAttribute("limitExists", limitExists);
         System.out.println("Your ID: " + id);
-
+//        System.out.println("User Info \n: " + user.toString());
+        System.out.printf("User Info with ID=%d [AFTER]: \n%s\n", id, users.get(id));
         // enter app
         return "redirect:/app_proxy";
     }
@@ -128,27 +145,6 @@ public class UserPortalController {
         model.addAttribute("role", user.getRole().toString());
         return "app_proxy";
     }
-
-//     TODO i think this should be moved to delete and upgrade controller classes since the functionality
-//        isn't within the scope of the user portal
-//    /**
-//     * Redirects user to a different page to delete their account
-//     * @return currently redirects to current page, will return delete user page once that is implemented
-//     */
-//    @PostMapping("/Delete")
-//    public String delete(){
-//        // send to delete page, for now sends back to main page
-//        return "redirect:/user_portal"; // TODO change this to delete page once that has been added, for now redirect to main page
-//    }
-//
-//    /**
-//     * @return currently redirects to current page, will return upgrade user page once that is implemented
-//     */
-//    @PostMapping("/Upgrade")
-//    public String upgrade(){
-//        // send to upgrade page, for now sends back to main page
-//        return "redirect:/user_portal"; // TODO change this to upgrade page once that has been added, for now redirect to main page
-//    }
 
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();

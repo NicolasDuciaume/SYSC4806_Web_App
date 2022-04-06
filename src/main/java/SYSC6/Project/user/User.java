@@ -52,7 +52,7 @@ public class User implements Serializable{
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, Username=%s, Password=%s, Role=%s, Clicks=%d,]",
+                "User[id=%d, Username=%s, Password=%s, Role=%s, Clicks=%d]",
                 id, username, password, role, clicks);
     }
 }
