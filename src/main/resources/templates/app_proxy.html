@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>App Proxy</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+
+<span id="role_val" style="display: none;" th:text="${role}"></span>
+
+<script>
+    window.onload = function appProxyMsg() {
+        // let user_role = $('#role_val').toString();
+        let user_role = document.getElementById("role_val").innerHTML
+        console.log(user_role);
+        if (user_role === "FREE_USER") {
+            console.log("Entered if in script");
+            document.getElementById("paid").style.visibility = "hidden";
+        } else {
+            console.log("Entered else in script");
+            document.getElementById("free1").style.visibility = "hidden";
+            document.getElementById("free2").style.visibility = "hidden";
+        }
+    }
+</script>
+
+<body class="img js-fullheight" style="background-image:url(../Images/app_proxy.jpg)">
+    <div class="container1">
+        <div style="text-align:center">
+            <h1 th:text="'Hello, ' + ${name} + '!'"/>
+            <h1 id="free1" th:text="'As a ' + ${role} + ' you have limited access'"/>
+            <h1 id="free2" th:text="'You have entered the app ' + ${clicks} + ' time(s)'"/>
+            <h1 id="paid" th:text="'You have entered the app as a ' + ${role} + '. You have unlimited access!'"/>
+        </div>
+    </div>
+    <div class="container2">
+        <div class="center" style="text-align: center">
+            <form action="#" method="post" th:action="@{/GoBack}">
+                <button class="float" type="submit">Go Back</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -22,6 +22,8 @@ public class User implements Serializable{
     private String password;
     @Column(name = "Role")
     private RoleType role = RoleType.NO_ROLE;
+    @Column(name = "Clicks")
+    private int clicks;
 
     public User(){
 
@@ -35,6 +37,7 @@ public class User implements Serializable{
         this.username = username;
         this.password = password;
         this.role = role;
+        this.clicks = 0;
     }
 
     public UserPOJO toPojo(){
@@ -42,13 +45,14 @@ public class User implements Serializable{
         userpojo.setId(this.id);
         userpojo.setUsername(this.username);
         userpojo.setRole(this.role.toString());
+        userpojo.setClicks(this.clicks);
         return userpojo;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, Username=%s, Password=%s, Role=%s]",
-                id, username, password, role);
+                "User[id=%d, Username=%s, Password=%s, Role=%s, Clicks=%d]",
+                id, username, password, role, clicks);
     }
 }

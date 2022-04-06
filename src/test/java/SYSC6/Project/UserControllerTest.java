@@ -1,20 +1,19 @@
 package SYSC6.Project;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
@@ -27,7 +26,7 @@ class UserControllerTest {
     @Test
     @Order(2)
     void getUserById() throws Exception {
-        this.mockMvc.perform(get("/rest/api/user/"+1)).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
+        this.mockMvc.perform(get("/rest/api/user/"+1)).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\",\"clicks\":0}"));
     }
 
     @Test
@@ -40,7 +39,7 @@ class UserControllerTest {
         obj.put("username", "Nazifa");
         obj.put("password","Friend");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj)));
-        this.mockMvc.perform(get("/rest/api/user")).andExpect(status().isOk()).andExpect(content().json("[{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"},{\"id\":2,\"username\":\"Nazifa\",\"password\":\"Friend\",\"role\":\"FREE_USER\"}]"));
+        this.mockMvc.perform(get("/rest/api/user")).andExpect(status().isOk()).andExpect(content().json("[{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\",\"clicks\":0},{\"id\":2,\"username\":\"Nazifa\",\"password\":\"Friend\",\"role\":\"FREE_USER\",\"clicks\":0}]"));
     }
 
     @Test
@@ -61,7 +60,7 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Moe");
         obj.put("password","Help");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":3,\"username\":\"Moe\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":3,\"username\":\"Moe\",\"password\":\"Help\",\"role\":\"FREE_USER\",\"clicks\":0}"));
     }
 
     @Test
@@ -70,10 +69,10 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Jim");
         obj.put("password","pass1!");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json("{\"id\":4,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"FREE_USER\"}"));
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json("{\"id\":4,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"FREE_USER\",\"clicks\":0}"));
         JSONObject objt = new JSONObject();
         objt.put("role","ADMIN");
-        this.mockMvc.perform(post("/rest/api/user/changeRole/"+4).contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"ADMIN\"}"));
+        this.mockMvc.perform(post("/rest/api/user/changeRole/"+4).contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Jim\",\"password\":\"pass1!\",\"role\":\"ADMIN\",\"clicks\":0}"));
     }
 
     @Test
@@ -82,11 +81,12 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Cole");
         obj.put("password","train1!");
-        String jsonString = "{\"id\":5,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"FREE_USER\"}";
+        String jsonString = "{\"id\":5,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"FREE_USER\",\"clicks\":0}";
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json(jsonString));
         JSONObject objt = new JSONObject();
-        String jsonStringTexpected = "{\"id\":5,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"PAID_USER\"}";
-        this.mockMvc.perform(put("/rest/api/user/upgrade/"+5).contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt)))
+        String jsonStringTexpected = "{\"id\":5,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"PAID_USER\",\"clicks\":0}";
+        this.mockMvc.perform(put("/rest/api/user/upgrade/"+5)
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(jsonStringTexpected));
     }
@@ -102,8 +102,9 @@ class UserControllerTest {
     void list() throws Exception {
         JSONObject obj = new JSONObject();
         String jsonStringTexpected = "{\"data\":[],\"recordsFiltered\":5,\"recordsTotal\":5,\"draw\":0}";
-        this.mockMvc.perform(post("/rest/api/usertable").contentType(MediaType.APPLICATION_JSON)
-                        .content(String.valueOf(obj)))
+        this.mockMvc.perform(post("/rest/api/usertable")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(obj)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(jsonStringTexpected));
     }
@@ -114,13 +115,13 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","admin");
         obj.put("password","admin");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":6,\"username\":\"admin\",\"password\":\"admin\",\"role\":\"ADMIN\"}"));
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":6,\"username\":\"admin\",\"password\":\"admin\",\"role\":\"ADMIN\",\"clicks\":0}"));
     }
 
     @Test
     @Order(10)
     void getUserAdmin() throws Exception {
-        this.mockMvc.perform(get("/rest/api/user/"+6)).andExpect(status().isOk()).andExpect(content().json("{\"id\":6,\"username\":\"admin\",\"password\":\"admin\",\"role\":\"ADMIN\"}"));
+        this.mockMvc.perform(get("/rest/api/user/"+6)).andExpect(status().isOk()).andExpect(content().json("{\"id\":6,\"username\":\"admin\",\"password\":\"admin\",\"role\":\"ADMIN\",\"clicks\":0}"));
     }
 
     @Test
@@ -129,7 +130,7 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Test");
         obj.put("password","User");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":7,\"username\":\"Test\",\"password\":\"User\",\"role\":\"FREE_USER\"}"));
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":7,\"username\":\"Test\",\"password\":\"User\",\"role\":\"FREE_USER\",\"clicks\":0}"));
         obj.put("password", "Test");
         this.mockMvc.perform(post("/rest/api/user/get/login").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isBadRequest());
     }
@@ -158,7 +159,7 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Nick");
         obj.put("password","Help");
-        this.mockMvc.perform(post("/rest/api/user/get/login").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
+        this.mockMvc.perform(post("/rest/api/user/get/login").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\",\"clicks\":0}"));
     }
 
 }

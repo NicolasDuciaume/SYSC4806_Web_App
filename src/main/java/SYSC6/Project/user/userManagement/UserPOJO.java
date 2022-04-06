@@ -15,5 +15,6 @@ public class UserPOJO {
     private Long id;
     private String username;
     private String role;
+    private int clicks;
 
 }
