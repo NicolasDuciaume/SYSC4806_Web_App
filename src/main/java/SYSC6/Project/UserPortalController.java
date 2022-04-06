@@ -27,7 +27,7 @@ public class UserPortalController {
     private static int LIMIT = 5; // for testing/demo only
     private boolean limitExists = false;
     private Long id = 0L;
-    private HashMap<Long, String> users = new HashMap<>(); // TODO: store users internally on portal and acces their info according to id
+    private HashMap<Long, String> users = new HashMap<>();
 
     @Autowired
     UserRepository userRepository;
@@ -37,18 +37,6 @@ public class UserPortalController {
         id = Integer.parseInt(userID) * 1L;
         return "redirect:/user_portal";
     }
-
-    /*
-    @PostMapping("/user_portal")
-    public String enterPortal(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="role",required=true) String role, Model model){
-        id = Integer.parseInt(UserId) * 1L;
-        checkRole(role);
-        model.addAttribute("limitExists", limitExists);
-
-        System.out.println("Entered user portal");
-
-        return "redirect:/user_portal";
-    }*/
 
     @GetMapping("/user_portal")
     public String greeting(Model model) {
