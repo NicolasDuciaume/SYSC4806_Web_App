@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Portal</title>
+    <title>Admin Portal - Home</title>
     <link th:rel="stylesheet" th:href="@{css/bootstrap.css} "/>
 </head>
 <style>
@@ -11,6 +11,9 @@
     }
     h4{
         padding-top: 20px;
+    }
+    #constraints{
+        padding-top: 50px;
     }
     body {
         background-color: lightblue;
@@ -48,6 +51,9 @@
     <p th:text="'Number of Paid-Users: '+${paid_users}+''"> </p>
     <p th:text="'Number of Free-Users: '+${free_users}+''"></p>
     <p th:text="'Number of Admins: '+${admin_users}+''"></p>
+    <h4 id="constraints" th:text="'Constraints'"></h4>
+    <p th:text="'Current Constraint Limit for Free Users: 1000'"></p>
+
 
 
 <!--    <form action="#" th:action="@{/LogOut}" method="post">-->
