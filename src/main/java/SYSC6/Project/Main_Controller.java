@@ -148,6 +148,7 @@ public class Main_Controller {
         User user = getUser(id);
         model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
+
         return "user_portal";
     }
 
