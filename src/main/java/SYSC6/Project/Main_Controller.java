@@ -1,6 +1,7 @@
 package SYSC6.Project;
 
 import SYSC6.Project.user.User;
+import SYSC6.Project.user.UserRepository;
 import SYSC6.Project.user.UserUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -160,10 +161,15 @@ public class Main_Controller {
         if(id==0){
             return "login_form";
         }
-        User user = getUser(id);
+        Admin user = getAdmin(id);
         if(UserUtil.hasAdmin(user)){
             model.addAttribute("name", "Admin");
             model.addAttribute("role", user.getRole().toString());
+            ArrayList<User> users = getAllUsers();
+            model.addAttribute("total_users",Integer.toString(users.size()));
+            model.addAttribute("free_users",getFreeUsers(users));
+            model.addAttribute("paid_users",getPaidUsers(users));
+            model.addAttribute("admin_users",getAdmins(users));
             return "admin_portal";
         }
         return "login_form";
@@ -218,6 +224,69 @@ public class Main_Controller {
         return x;
     }
 
+    public ArrayList<User> getAllUsers(){
+        JSONParser jsonParser = new JSONParser();
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user");
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
+                for(Object o : temp){
+                    JSONObject user = (JSONObject) o;
+                    User userTemp = new User(user.get("username").toString(), user.get("password").toString(),RoleType.getRoleByString(user.get("role").toString()));
+                    userTemp.setId((Long) user.get("id"));
+                    users.add(userTemp);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("getAllUsers() Error");
+        }
+        return users;
+    }
+
+    public String getFreeUsers(ArrayList<User> users){
+        int counter = 0;
+        for(User user : users){
+            if(user.getRole() == RoleType.FREE_USER){
+                counter++;
+            }
+        }
+        return Integer.toString(counter);
+    }
+    public String getPaidUsers(ArrayList<User> users){
+        int counter = 0;
+        for(User user : users){
+            if(user.getRole() == RoleType.PAID_USER){
+                counter++;
+            }
+        }
+        return Integer.toString(counter);
+    }
+
+    public String getAdmins(ArrayList<User> users){
+        int counter = 0;
+        for(User user : users){
+            if(user.getRole() == RoleType.ADMIN){
+                counter++;
+            }
+        }
+        return Integer.toString(counter);
+    }
+
     /**
      * Used by other Java endpoints to fetch a User
      * @param id, id
@@ -226,7 +295,7 @@ public class Main_Controller {
     public User getUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
-        System.out.println(id);
+//        System.out.println(id);
         try {
             URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -242,7 +311,7 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response);
+//                System.out.println(response);
                 JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
                 //System.out.println(temp.get("username").toString());
                 user = new User(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
@@ -252,7 +321,39 @@ public class Main_Controller {
             }
         }
         catch (IOException e){
-            System.out.println("Error");
+            System.out.println("getUser() Error");
+        }
+        return user;
+    }
+
+    public Admin getAdmin(Long id){
+        JSONParser jsonParser = new JSONParser();
+        Admin user = new Admin();
+//        System.out.println(id);
+        try {
+            URL url = new URL ("http://localhost:8080/rest/api/user/"+id.toString());
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                JSONObject temp = (JSONObject) jsonParser.parse(response.toString());
+                user = new Admin(temp.get("username").toString(), temp.get("password").toString(), RoleType.getRoleByString(temp.get("role").toString()));
+                user.setId(Long.valueOf(temp.get("id").toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e){
+            System.out.println("getUser() Error");
         }
         return user;
     }
@@ -279,7 +380,7 @@ public class Main_Controller {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response);
+//                System.out.println(response);
                 JSONArray temp = (JSONArray) jsonParser.parse(response.toString());
                 for(Object o : temp){
                     JSONObject user = (JSONObject) o;
@@ -297,7 +398,6 @@ public class Main_Controller {
         }
         return users;
     }
-
 
     public User deleteUser(Long id){
         JSONParser jsonParser = new JSONParser();
