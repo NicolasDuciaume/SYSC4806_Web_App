@@ -31,26 +31,6 @@ class Main_ControllerTest {
     }
     */
 
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
->>>>>>> 35-delete-user-portal
-    /*
-    @Test
-    @Order(3)
-    void login_process() throws Exception {
-        JSONObject obj = new JSONObject();
-        obj.put("username", "admin");
-        obj.put("password","admin");
-        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated());
-        this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/admin_portal"));
-    }
-     */
-<<<<<<< HEAD
->>>>>>> Completed user delete method functionality
-=======
->>>>>>> 35-delete-user-portal
 
     @Test
     @Order(3)
@@ -64,29 +44,6 @@ class Main_ControllerTest {
         this.mockMvc.perform(post("/login_form").param("id", "2").param("admin","not")).andExpect(redirectedUrl("/user_portal"));
     }
 
-<<<<<<< master
-=======
-    @Test
-    @Order(1)
-    void create1() throws Exception {
-        this.mockMvc.perform(post("/TempCreate").param("admin", "not").param("id", "1")).andExpect(redirectedUrl("/user_portal"));
-    }
-
-    @Test
-<<<<<<< HEAD
-=======
-    @Order(1)
-    void create1() throws Exception {
-        this.mockMvc.perform(post("/TempCreate").param("admin", "not").param("id", "1")).andExpect(redirectedUrl("/user_portal"));
-    }
-
-    @Test
->>>>>>> 35-delete-user-portal
-    @Order(2)
-    void create2() throws Exception {
-        this.mockMvc.perform(post("/TempCreate").param("admin", "admin").param("id", "2")).andExpect(redirectedUrl("/admin_portal"));
-    }
->>>>>>> Completed user delete method functionality
 
     @Test
     void register() throws Exception {

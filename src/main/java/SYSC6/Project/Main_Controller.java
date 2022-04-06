@@ -21,18 +21,14 @@ import java.util.ArrayList;
 
 @Controller
 public class Main_Controller {
-<<<<<<< master
 
     /**
      * Id of the current logged in User
      * TestFlag is a flag to determine if the initial admin set up was done or not
      */
-=======
->>>>>>> Completed user delete method functionality
     private Long id = 0L;
     private boolean testFlag = true;
 
-<<<<<<< master
     /**
      * Sets a basic user and admin within the system sur-conventing the need for required password format
      */
@@ -51,10 +47,6 @@ public class Main_Controller {
     @GetMapping("/")
     public String login(){
         testInit();
-=======
-    @GetMapping("/")
-    public String login(){
->>>>>>> Completed user delete method functionality
         return "login_form";
     }
 
@@ -67,11 +59,7 @@ public class Main_Controller {
      */
     @PostMapping("/login_form")
     public String login_process(@RequestParam(value="id",required=true) String UserId, @RequestParam(value="admin", required = true) String admin){
-<<<<<<< master
         id = (long) Integer.parseInt(UserId);
-=======
-        id = Integer.parseInt(UserId) * 1L;
->>>>>>> Completed user delete method functionality
         if(admin.equals("admin")){
             return "redirect:/admin_portal";
         }
@@ -87,19 +75,37 @@ public class Main_Controller {
         return "redirect:/Registration";
     }
 
-<<<<<<< master
     /**
      * Displays the html for the registration page
      * @return
      */
-=======
->>>>>>> Completed user delete method functionality
     @GetMapping("/Registration")
     public String Reg(){
         return "Registration";
     }
 
-<<<<<<< master
+    @PostMapping("/noDelete")
+    public String back() {
+        return "redirect:/user_portal";
+    }
+
+    @PostMapping("/yes_delete")
+    public String deleteUsers() {
+        deleteUser(this.id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/confirm_delete")
+    public String delete_page() {
+        return "redirect:/confirm_delete";
+    }
+
+    @PostMapping("/confirm_delete")
+    public String delete() {
+        return "confirm_delete";
+    }
+
     /**
      * Used to create a new user sent over from the registration page
      * User is tagged with an id and an admin value to redirect to its appropriate page
@@ -107,29 +113,6 @@ public class Main_Controller {
      * @param TempId the user id
      * @return user_portal page or admin_portal page
      */
-    @PostMapping("/TempCreate")
-    public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
-        id = Integer.parseInt(TempId) * 1L;
-        if(admin.equals("admin")){
-            return "redirect:/admin_portal";
-        }
-        else{
-            return "redirect:/user_portal";
-=======
-    /*
-    @PostMapping("/Create")
-    public String create(@RequestParam(value="user",required=true) String user, @RequestParam(value="pass",required=true) String pass){
-        id = createUser(user,pass);
-        User check_user = getUser(id);
-        if(check_user.getUsername().equals("admin")){
-            if(check_user.getPassword().equals("admin")){
-                return "redirect:/admin_portal";
-            }
->>>>>>> Completed user delete method functionality
-        }
-    }
-    */
-
     @PostMapping("/TempCreate")
     public String TempCreate(@RequestParam(value="admin", required = true) String admin, @RequestParam(value="id", required = true) String TempId){
         id = Integer.parseInt(TempId) * 1L;
@@ -162,43 +145,16 @@ public class Main_Controller {
             return "login_form";
         }
         User user = getUser(id);
-<<<<<<< master
         model.addAttribute("name", user.getUsername());
-=======
-        name_place = user.getUsername();
-        model.addAttribute("name", name_place);
->>>>>>> Completed user delete method functionality
         model.addAttribute("role", user.getRole().toString());
         return "user_portal";
     }
 
-    @PostMapping("/noDelete")
-    public String back() {
+    @PutMapping("/Upgrade")
+    private String upgradeUser(){
         return "redirect:/user_portal";
     }
 
-    @PostMapping("/yes_delete")
-    public String deleteUsers() {
-        deleteUser(this.id);
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/confirm_delete")
-    public String delete_page() {
-        return "redirect:/confirm_delete";
-    }
-
-    @PostMapping("/confirm_delete")
-    public String delete() {
-        return "confirm_delete";
-    }
-
-    // GetMapping for HTML page
-    // Yes: calls the delete_user command
-    // No returns to the user portal page
-
->>>>>>> Completed user delete method functionality
     @GetMapping("/admin_portal")
     public String greeting_admin(@RequestParam(name="name", required=false, defaultValue="World") String name_place, Model model) {
         if(id==0){
@@ -225,11 +181,6 @@ public class Main_Controller {
         return logout();
     }
 
-<<<<<<< master
-    //---
-
-=======
->>>>>>> Completed user delete method functionality
     public Long createUser(String Username, String Password){
         JSONParser jsonParser = new JSONParser();
         Long x = 0L;
@@ -347,12 +298,8 @@ public class Main_Controller {
         return users;
     }
 
-<<<<<<< master
 
-    public User DelUser(Long id){
-=======
     public User deleteUser(Long id){
->>>>>>> Completed user delete method functionality
         JSONParser jsonParser = new JSONParser();
         User user = new User();
         System.out.println(id);
@@ -384,17 +331,6 @@ public class Main_Controller {
             System.out.println("Error");
         }
         return user;
-
-        // Button to Delete user
-        // redirects to the DeletePortal page
-        // add controller and HTML
-        // Delete account portal
-        // Redirects to a method in my controller
-        // In the method, it will delete the user
-        // DeletePortal.html
-        // Test endpoint: going to that page, Delete portal
-        // GET and POST request that works
-        // Delete button, and then popup. Yes Delete, NO go back to user portal
     }
 
     /**

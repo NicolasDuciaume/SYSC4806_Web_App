@@ -105,7 +105,6 @@ public class UserController {
         return new ResponseEntity<>(userTemp, HttpStatus.CREATED);
     }
 
-<<<<<<< master:src/main/java/SYSC6/Project/user/UserController.java
     @DeleteMapping("/user/Del/{id}")
     public ResponseEntity<HttpStatus> deleteBuddy(@PathVariable("id") long id) {
         userRepository.deleteById(id);
@@ -137,7 +136,4 @@ public class UserController {
         User userUpdated = userRepository.save(floatingUser);
         return new ResponseEntity<>(userUpdated, HttpStatus.CREATED);
     }
-=======
-    // Method for deleting the user
->>>>>>> Created DeletedUserPortal class:src/main/java/SYSC6/Project/UserController.java
 }
