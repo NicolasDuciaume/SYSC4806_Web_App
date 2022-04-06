@@ -23,7 +23,8 @@ import java.util.HashMap;
 
 @Controller
 public class UserPortalController {
-    private static int LIMIT = 1000;
+//    private static int LIMIT = 1000;
+    private static int LIMIT = 5; // for testing/demo only
     private boolean limitExists = false;
     private Long id = 0L;
     private HashMap<Long, String> users = new HashMap<>(); // TODO: store users internally on portal and acces their info according to id
@@ -123,10 +124,10 @@ public class UserPortalController {
         user.setClicks(numClicks); // Update user
         userRepository.save(user); // update clicks in database
 
-        model.addAttribute("limitExists", limitExists);
         System.out.println("Your ID: " + id);
 //        System.out.println("User Info \n: " + user.toString());
         System.out.printf("User Info with ID=%d [AFTER]: \n%s\n", id, users.get(id));
+
         // enter app
         return "redirect:/app_proxy";
     }
@@ -141,8 +142,12 @@ public class UserPortalController {
     @GetMapping("/app_proxy")
     public String enterApp(Model model){
         User user = getUser(id);
+        int numClicks = Integer.parseInt(users.get(id).split("=")[5].replace("]", ""));
+
         model.addAttribute("name", user.getUsername());
         model.addAttribute("role", user.getRole().toString());
+//        model.addAttribute("clicks", user.getClicks());
+        model.addAttribute("clicks", numClicks);
         return "app_proxy";
     }
 
