@@ -96,7 +96,10 @@ class UserControllerTest {
         obj.put("password","Check");
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj)));
         this.mockMvc.perform(get("/rest/api/user/get/Test/Check")).andExpect(status().isOk()).andExpect(content().json("{\"id\":3,\"username\":\"Test\",\"password\":\"Check\",\"role\":\"FREE_USER\"}"));
+<<<<<<< HEAD
 >>>>>>> Completed user delete method functionality
+=======
+>>>>>>> 35-delete-user-portal
     }
 
     /*
@@ -167,11 +170,15 @@ class UserControllerTest {
         JSONObject obj = new JSONObject();
         obj.put("username","Nick");
         obj.put("password","Help");
+<<<<<<< HEAD
 <<<<<<< master
         this.mockMvc.perform(post("/rest/api/user/get/login").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isOk()).andExpect(content().json("{\"id\":1,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
 =======
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
 >>>>>>> Completed user delete method functionality
+=======
+        this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(status().isCreated()).andExpect(content().json("{\"id\":4,\"username\":\"Nick\",\"password\":\"Help\",\"role\":\"FREE_USER\"}"));
+>>>>>>> 35-delete-user-portal
     }
 
 }

@@ -11,8 +11,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+<<<<<<< HEAD
         registry.addResourceHandler("/css/**", "/Javascript/**", "/Images/**", "datatable/**", "jquery/**")
                 .addResourceLocations("classpath:/css/", "classpath:/Javascript/", "classpath:/Images/", "classpath:/Datatable/", "classpath:/jquery/");
+=======
+        registry.addResourceHandler("/css/**", "/Javascript/**", "/Images/**")
+                .addResourceLocations("classpath:/css/", "classpath:/Javascript/", "classpath:/Images/");
+>>>>>>> 35-delete-user-portal
     }
 
 }

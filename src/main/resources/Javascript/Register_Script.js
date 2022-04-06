@@ -1,4 +1,5 @@
 function myFunction() {
+<<<<<<< HEAD
 <<<<<<< master
     var pass = document.getElementById("password").value
     var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
@@ -27,6 +28,8 @@ function myFunction() {
         alert("Password must adhere to guidelines")
     }
 =======
+=======
+>>>>>>> 35-delete-user-portal
     console.log(document.getElementById("username").value);
     $.ajax({
         type: "GET",
@@ -41,7 +44,10 @@ function myFunction() {
             alert("Username already in use");
         }
     });
+<<<<<<< HEAD
 >>>>>>> Completed user delete method functionality
+=======
+>>>>>>> 35-delete-user-portal
 }
 
 function createFunction(){

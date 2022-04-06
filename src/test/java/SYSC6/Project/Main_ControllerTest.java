@@ -31,8 +31,11 @@ class Main_ControllerTest {
     }
     */
 
+<<<<<<< HEAD
 <<<<<<< master
 =======
+=======
+>>>>>>> 35-delete-user-portal
     /*
     @Test
     @Order(3)
@@ -44,7 +47,10 @@ class Main_ControllerTest {
         this.mockMvc.perform(post("/login_form").param("id", "1")).andExpect(redirectedUrl("/admin_portal"));
     }
      */
+<<<<<<< HEAD
 >>>>>>> Completed user delete method functionality
+=======
+>>>>>>> 35-delete-user-portal
 
     @Test
     @Order(3)
@@ -67,6 +73,15 @@ class Main_ControllerTest {
     }
 
     @Test
+<<<<<<< HEAD
+=======
+    @Order(1)
+    void create1() throws Exception {
+        this.mockMvc.perform(post("/TempCreate").param("admin", "not").param("id", "1")).andExpect(redirectedUrl("/user_portal"));
+    }
+
+    @Test
+>>>>>>> 35-delete-user-portal
     @Order(2)
     void create2() throws Exception {
         this.mockMvc.perform(post("/TempCreate").param("admin", "admin").param("id", "2")).andExpect(redirectedUrl("/admin_portal"));
