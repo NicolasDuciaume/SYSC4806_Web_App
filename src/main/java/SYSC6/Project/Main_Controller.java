@@ -147,6 +147,7 @@ public class Main_Controller {
             model.addAttribute("total_users",Integer.toString(users.size()));
             model.addAttribute("free_users",getFreeUsers(users));
             model.addAttribute("paid_users",getPaidUsers(users));
+            model.addAttribute("admin_users",getAdmins(users));
             return "admin_portal";
         }
         return "login_form";
@@ -249,6 +250,16 @@ public class Main_Controller {
         int counter = 0;
         for(User user : users){
             if(user.getRole() == RoleType.PAID_USER){
+                counter++;
+            }
+        }
+        return Integer.toString(counter);
+    }
+
+    public String getAdmins(ArrayList<User> users){
+        int counter = 0;
+        for(User user : users){
+            if(user.getRole() == RoleType.ADMIN){
                 counter++;
             }
         }
