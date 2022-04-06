@@ -1,7 +1,7 @@
 function myFunction() {
     $.ajax({
         type: "POST",
-        url: "https://projectsysc4806.herokuapp.com/rest/api/user/get/login",
+        url: "http://projectsysc4806.herokuapp.com/rest/api/user/get/login",
         contentType : "application/json",
         dataType : 'json',
         data:JSON.stringify({"username": document.getElementById("username").value,"password" :document.getElementById("password").value}),
