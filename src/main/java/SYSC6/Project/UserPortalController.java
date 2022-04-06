@@ -32,12 +32,25 @@ public class UserPortalController {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * Retrieve's the user's id from the path
+     *
+     * @param userID
+     * @return
+     */
     @GetMapping("/user/{id}")
     public String getId(@PathVariable("id") String userID){
         id = Integer.parseInt(userID) * 1L;
         return "redirect:/user_portal";
     }
 
+    /**
+     * Saves user data locally if it's their first time in the portal
+     * Checks the role of the user
+     *
+     * @param model
+     * @return login_form (if id is 0), user_portal (if id is not 0)
+     */
     @GetMapping("/user_portal")
     public String greeting(Model model) {
         if(id==0){
@@ -56,6 +69,11 @@ public class UserPortalController {
         return "user_portal";
     }
 
+    /**
+     * Goes back to user_portal from app_proxy
+     *
+     * @return user_portal
+     */
     @PostMapping("/GoBack")
     public String goBack(){
 
@@ -82,7 +100,10 @@ public class UserPortalController {
     }
 
     /**
-     * @return redirects page to the app proxy
+     * Increments the clicks for the user and stores the updated value
+     * checks if the user's limit has been reached and prevents them from entering the app if they have
+     *
+     * @return app_proxy (if limit not reached) or user_portal (if limit reached)
      */
     @PostMapping("/Click")
     public String incrementClicks(Model model){
