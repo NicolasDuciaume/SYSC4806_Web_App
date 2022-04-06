@@ -1,6 +1,4 @@
 function myFunction() {
-<<<<<<< HEAD
-<<<<<<< master
     var pass = document.getElementById("password").value
     var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     var format2 = /[0123456789]/;
@@ -27,27 +25,6 @@ function myFunction() {
     else{
         alert("Password must adhere to guidelines")
     }
-=======
-=======
->>>>>>> 35-delete-user-portal
-    console.log(document.getElementById("username").value);
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/rest/api/user/get/" + document.getElementById("username").value,
-        contentType : "application/json",
-        success: function (data) {
-            document.getElementById("userHidden").value = document.getElementById("username").value
-            document.getElementById("passHidden").value = document.getElementById("password").value
-            createFunction()
-        },
-        error: function (data) {
-            alert("Username already in use");
-        }
-    });
-<<<<<<< HEAD
->>>>>>> Completed user delete method functionality
-=======
->>>>>>> 35-delete-user-portal
 }
 
 function createFunction(){
