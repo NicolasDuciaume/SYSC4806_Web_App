@@ -6,8 +6,12 @@
     <link href="../css/LoginStyle.css" rel="stylesheet">
 </head>
 <body>
-    <form action="#" method="post" th:action="@{/delete_user}">
-        <button class="button1" type="submit">Delete User</button>
+    <h2>Are you sure you want to delete the user?</h2>
+    <form action="#" method="post" th:action="@{/yes_delete}">
+        <button class="button1" type="submit">Yes - Delete User</button>
+    </form>
+    <form action="#" method="post" th:action="@{/noDelete}">
+        <button class="button1" type="submit">No - Go Back</button>
     </form>
 </body>
 </html>
