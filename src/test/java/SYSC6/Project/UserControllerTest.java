@@ -86,8 +86,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/rest/api/user/add").contentType(MediaType.APPLICATION_JSON).content(String.valueOf(obj))).andExpect(content().json(jsonString));
         JSONObject objt = new JSONObject();
         String jsonStringTexpected = "{\"id\":5,\"username\":\"Cole\",\"password\":\"train1!\",\"role\":\"PAID_USER\"}";
-        this.mockMvc.perform(put("/rest/api/user/upgrade/"+5)
-                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt)))
+        this.mockMvc.perform(put("/rest/api/user/upgrade/"+5).contentType(MediaType.APPLICATION_JSON).content(String.valueOf(objt)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(jsonStringTexpected));
     }
@@ -103,9 +102,8 @@ class UserControllerTest {
     void list() throws Exception {
         JSONObject obj = new JSONObject();
         String jsonStringTexpected = "{\"data\":[],\"recordsFiltered\":5,\"recordsTotal\":5,\"draw\":0}";
-        this.mockMvc.perform(post("/rest/api/usertable")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(obj)))
+        this.mockMvc.perform(post("/rest/api/usertable").contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(obj)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(jsonStringTexpected));
     }

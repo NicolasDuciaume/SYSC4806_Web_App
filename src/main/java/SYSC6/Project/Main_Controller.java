@@ -85,6 +85,28 @@ public class Main_Controller {
         return "Registration";
     }
 
+    @PostMapping("/noDelete")
+    public String back() {
+        return "redirect:/user_portal";
+    }
+
+    @PostMapping("/yes_delete")
+    public String deleteUsers() {
+        deleteUser(this.id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/confirm_delete")
+    public String delete_page() {
+        return "redirect:/confirm_delete";
+    }
+
+    @PostMapping("/confirm_delete")
+    public String delete() {
+        return "confirm_delete";
+    }
+
     /**
      * Used to create a new user sent over from the registration page
      * User is tagged with an id and an admin value to redirect to its appropriate page
@@ -377,7 +399,7 @@ public class Main_Controller {
         return users;
     }
 
-    public User DelUser(Long id){
+    public User deleteUser(Long id){
         JSONParser jsonParser = new JSONParser();
         User user = new User();
         System.out.println(id);
