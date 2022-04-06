@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("addressbook not found"));
+                .orElseThrow(() -> new RuntimeException("User not found!"));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
